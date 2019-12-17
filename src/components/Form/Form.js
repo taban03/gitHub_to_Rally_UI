@@ -42,8 +42,15 @@ export class IncorporationForm extends React.Component {
             //         },
             // },
             rule: "",
-            labels: "", items: "",
+            labels: "",
+            items: "",
             state: "",
+            api_key: "",
+            rally_host: "",
+            workspace: "",
+            project: "",
+            github_base_url: "",
+            repository: "",
             usId: "",
             taskName: "",
             name: "",
@@ -59,61 +66,58 @@ export class IncorporationForm extends React.Component {
     }
 
 
-function() {
-        function toJSONString( form ) {
-            var obj = {};
-            var elements = form.querySelectorAll( "input, select, textarea" );
-            for( var i = 0; i < elements.length; ++i ) {
-                var element = elements[i];
-                var name = element.name;
-                var value = element.value;
 
-                if( name ) {
-                    obj[ name ] = value;
-                }
-            }
-
-            return JSON.stringify( obj );
-        }
-
-        document.addEventListener( "DOMContentLoaded", function() {
-            var form = document.getElementById( "test" );
-            var output = document.getElementById( "output" );
-            form.addEventListener( "submit", function( e ) {
-                e.preventDefault();
-                var json = toJSONString( this );
-                output.innerHTML = json;
-
-            }, false);
-
-        });
-
-    };
 
     submitForm = async e => {
-        // e.preventDefault();
-        // this.setState({isSubmitting: true});
-        // const res = await fetch("http://localhost:8080/submit", {
-        //     method: "POST",
-        //     body: JSON.stringify(this.state.values),
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     }
-        // });
-        // this.setState({isSubmitting: false});
-        // const data = await res.json();
-        // console.log(data)
-        // !data.hasOwnProperty("error")
-        //     ? this.setState({message: data.success})
-        //     : this.setState({message: data.error, isError: true});
         e.preventDefault();
-
-        const data = new FormData(e.target);
-
-        fetch('http://localhost:8080/submit', {
-            method: 'POST',
-            body: data,
+        this.setState({isSubmitting: true});
+        const res = await fetch("http://localhost:8080/submit", {
+            method: "POST",
+            body: JSON.stringify({
+                "github": {
+                    "api_key": this.state.api_key,
+                    "github_base_url": this.state.github_base_url,
+                    "repository": this.state.repository,
+                },
+                "rally": {
+                    "api_key": this.state.api_key,
+                    "rally_host": this.state.rally_host,
+                    "workspace": this.state.workspace,
+                    "project": this.state.project
+                },
+                "rules": {
+                    "commit": [
+                        {"item": this.state.items, "action": this.state.state},
+                    ],
+                    "open-pull-request": [
+                        {"item": this.state.items, "action": this.state.state},
+                    ],
+                    "merged-pull-request": [
+                        {"item": this.state.items, "action": this.state.state},
+                    ],
+                    "labels": [
+                        {"labelName": this.state.state, "item": this.name, "action": this.state.state},
+                    ],
+                    "ready": [
+                        {
+                            "story-state": this.state, "conditions": [
+                                {"item": this.state.name, "state": this.state.state}
+                            ]
+                        }],
+                    "new-issue": []
+                }
+                }),
+            headers: {
+                "Content-Type": "application/json"
+            }
         });
+        this.setState({isSubmitting: false});
+        const data = await res.json();
+        console.log(data)
+        !data.hasOwnProperty("error")
+            ? this.setState({message: data.success})
+            : this.setState({message: data.error, isError: true});
+
 
         console.log(data)
     }
@@ -275,16 +279,16 @@ function() {
                     <div className="initial-configuration-information">
                         <h2>Initial configuration information</h2>
                         <h4>GitHub</h4>
-                        <p>API key:  <TextField id="standard-basic" label="API key"/></p>
-                        <p>GitHub base URL:  <TextField id="standard-basic" label="GitHub base URL"/></p>
-                        <p>Repository:  <TextField id="standard-basic" label="Repository"/></p>
+                        <p>API key:  <TextField name="apiKey" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
+                        <p>GitHub base URL:  <TextField name="github_base_url" onChange={this.handleStatusChange} id="standard-basic" label="GitHub base URL"/></p>
+                        <p>Repository:  <TextField name="repository" onChange={this.handleStatusChange} id="standard-basic" label="Repository"/></p>
                         <br />
                         <br />
                         <h4>Rally</h4>
-                        <p>API key:  <TextField id="standard-basic" label="API key"/></p>
-                        <p>Rally host:  <TextField id="standard-basic" label="Rally host"/></p>
-                        <p>Workspace:  <TextField id="standard-basic" label="Workspace"/></p>
-                        <p>Project:  <TextField id="standard-basic" label="Project"/></p>
+                        <p>API key:  <TextField name="apiKey" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
+                        <p>Rally host:  <TextField name="rally_host" onChange={this.handleStatusChange} id="standard-basic" label="Rally host"/></p>
+                        <p>Workspace:  <TextField name="workspace" onChange={this.handleStatusChange} id="standard-basic" label="Workspace"/></p>
+                        <p>Project:  <TextField name="project" onChange={this.handleStatusChange} id="standard-basic" label="Project"/></p>
                         <br />
                         <br />
                         <h4>Initial Timestamp</h4>
@@ -491,7 +495,7 @@ function() {
                     <div className="shareholder">
                         <p>Create a new defect only if the issue contains this label </p>
                         <TextField id="standard-basic" label="Defect Tag"
-                            // onChange={this.handleShareholderNameChange(idx)}
+                            onChange={this.handleStatusChange}
                         />
 
                         {shareholder.isA && !shareholder.isTaskPar && (
@@ -525,7 +529,7 @@ function() {
                 {this.state.shareholdersCommits.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>When the story state of US is </p>
-                        <TextField name="usId" id="standard-basic" label="US ID"
+                        <TextField name="usId" onChange={this.handleStatusChange} id="standard-basic" label="US ID"
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> and the task with name </p>
@@ -533,7 +537,7 @@ function() {
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> is in state </p>
-                        <TextField name="state" id="standard-basic" label="Task state "
+                        <TextField name="state"  onChange={this.handleStatusChange} id="standard-basic" label="Task state "
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> then mark it as ready. </p>
