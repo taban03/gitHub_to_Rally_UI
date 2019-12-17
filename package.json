@@ -7,7 +7,10 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "body-parser": "latest",
     "bootstrap": "^4.4.1",
+    "express": "latest",
+    "express-validator": "^6.3.0",
     "material-ui-form": "^1.0.0-alpha.26",
     "react": "^16.12.0",
     "react-addons-update": "^15.6.2",
@@ -41,6 +44,7 @@
     ]
   },
   "devDependencies": {
-    "@material-ui/icons": "^4.5.1"
+    "@material-ui/icons": "^4.5.1",
+    "cors": "^2.8.5"
   }
 }

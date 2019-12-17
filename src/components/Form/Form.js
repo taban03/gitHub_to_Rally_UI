@@ -12,7 +12,6 @@ const Par = () => {
         <div class="flexbox-container">
             <p id="textP" >to </p>
             <TextField id="standard-basic" label="State" />
-            <p >state</p>
         </div>
     )
 }
@@ -20,9 +19,10 @@ const Par = () => {
 const ParTask = () => {
     return (
         <div class="flexbox-container">
-            <p id="textP" >with </p>
+            <p id="textP" >with  </p>
+            <TextField id="standard-basic" label="Name" />
+            <p > to </p>
             <TextField id="standard-basic" label="State" />
-            <p >state</p>
         </div>
     )
 }
@@ -32,6 +32,11 @@ export class IncorporationForm extends React.Component {
         super(props);
 
         this.state = {
+            values: {
+                password: "dwd"
+            },
+            isSubmitting: false,
+            isError: false,
             isAndrea: false,
             name: "",
             message: [],
@@ -45,6 +50,65 @@ export class IncorporationForm extends React.Component {
 
     }
 
+
+function() {
+        function toJSONString( form ) {
+            var obj = {};
+            var elements = form.querySelectorAll( "input, select, textarea" );
+            for( var i = 0; i < elements.length; ++i ) {
+                var element = elements[i];
+                var name = element.name;
+                var value = element.value;
+
+                if( name ) {
+                    obj[ name ] = value;
+                }
+            }
+
+            return JSON.stringify( obj );
+        }
+
+        document.addEventListener( "DOMContentLoaded", function() {
+            var form = document.getElementById( "test" );
+            var output = document.getElementById( "output" );
+            form.addEventListener( "submit", function( e ) {
+                e.preventDefault();
+                var json = toJSONString( this );
+                output.innerHTML = json;
+
+            }, false);
+
+        });
+
+    };
+
+
+
+    handleStatusField(e) {
+        let value = e.target.value;
+        this.setState( prevState => ({ newUser :
+                {...prevState.newUser, name: value
+                }
+        }))
+    }
+//.
+    submitForm = async e => {
+        e.preventDefault();
+        this.setState({isSubmitting: true});
+        const res = await fetch("http://localhost:8080/submit", {
+            method: "POST",
+            body: JSON.stringify(this.state.values),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        this.setState({isSubmitting: false});
+        const data = await res.json();
+        console.log(data)
+        !data.hasOwnProperty("error")
+            ? this.setState({message: data.success})
+            : this.setState({message: data.error, isError: true});
+    }
 
     handleShareholderNameChange = idx => evt => {
         const newShareholders = this.state.shareholders.map((shareholder, sidx) => {
@@ -191,7 +255,7 @@ export class IncorporationForm extends React.Component {
         const isClicked  = this.state.isClicked ;
         console.log(this.state.shareholders)
         return (
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={this.submitForm}>
 
                 <h1>Rules Definition Form</h1>
                 <div>
@@ -281,8 +345,6 @@ export class IncorporationForm extends React.Component {
                             <ParTask />
                         )}
 
-
-
                         <button
                             type="button"
                             onClick={this.handleRemoveShareholder(0)}
@@ -368,8 +430,6 @@ export class IncorporationForm extends React.Component {
                         {shareholder.isTaskPar && !shareholder.isA && (
                             <ParTask />
                         )}
-
-
 
                         <button
                             type="button"
