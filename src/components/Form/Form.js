@@ -33,7 +33,6 @@ export class IncorporationForm extends React.Component {
         super(props);
 
         this.state = {
-            isAndrea: false,
             name: "",
             message: [],
             isClicked: false,
@@ -250,6 +249,7 @@ function() {
     render() {
         const isClicked  = this.state.isClicked ;
         console.log(this.state.shareholders)
+        // const formData = JSON.stringify(new JSONFormData(form).formData);
         return (
             <form onSubmit={this.submitForm}>
 
