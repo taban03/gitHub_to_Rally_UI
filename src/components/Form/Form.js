@@ -32,11 +32,6 @@ export class IncorporationForm extends React.Component {
         super(props);
 
         this.state = {
-            values: {
-                password: "dwd"
-            },
-            isSubmitting: false,
-            isError: false,
             isAndrea: false,
             name: "",
             message: [],
@@ -259,6 +254,28 @@ function() {
 
                 <h1>Rules Definition Form</h1>
                 <div>
+                    <div className="initial-configuration-information">
+                        <h2>Initial configuration information</h2>
+                        <h4>GitHub</h4>
+                        <p>API key:  <TextField id="standard-basic" label="API key"/></p>
+                        <p>GitHub base URL:  <TextField id="standard-basic" label="GitHub base URL"/></p>
+                        <p>Repository:  <TextField id="standard-basic" label="Repository"/></p>
+                        <br />
+                        <br />
+                        <h4>Rally</h4>
+                        <p>API key:  <TextField id="standard-basic" label="API key"/></p>
+                        <p>Rally host:  <TextField id="standard-basic" label="Rally host"/></p>
+                        <p>Workspace:  <TextField id="standard-basic" label="Workspace"/></p>
+                        <p>Project:  <TextField id="standard-basic" label="Project"/></p>
+                        <br />
+                        <br />
+                        <h4>Initial Timestamp</h4>
+                        <Form.Control
+                        type="date"
+                        />
+                    </div>
+                    <br />
+                    <br />
                     <div className="rows">
                     <div className="mainLab">
                     <h2>Labels of pull request</h2>
