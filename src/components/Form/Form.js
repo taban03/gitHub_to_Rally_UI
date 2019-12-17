@@ -1,9 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import AddIcon from '@material-ui/icons/Add';
 import "./File.css";
-import Fab from '@material-ui/core/Fab';
-import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import update from 'react-addons-update';
@@ -42,7 +39,8 @@ export class IncorporationForm extends React.Component {
             shareholders: [{ name: "", isA: false, isTaskPar: false, and: "text" }],
             shareholdersMergedPr: [{ name: "", isA: false, isTaskPar: false, and: "text" }],
             shareholdersOpenPr: [{ name: "", isA: false, isTaskPar: false, and: "text" }],
-            shareholdersCommits: [{ name: "", isA: false, isTaskPar: false, and: "text" }]
+            shareholdersCommits: [{ name: "", isA: false, isTaskPar: false, and: "text" }],
+            shareholdersNewIssues: [{ name: "", isA: false, isTaskPar: false, and: "text" }]
         };
 
     }
@@ -195,7 +193,7 @@ export class IncorporationForm extends React.Component {
         return (
             <form onSubmit={this.handleSubmit}>
 
-                <h4>Configuration Form</h4>
+                <h1>Rules Definition Form</h1>
                 <div>
                     <div className="rows">
                     <div className="mainLab">
@@ -234,8 +232,6 @@ export class IncorporationForm extends React.Component {
                             <ParTask />
                         )}
 
-
-
                         <button
                             type="button"
                             onClick={this.handleRemoveShareholder(0)}
@@ -245,6 +241,8 @@ export class IncorporationForm extends React.Component {
                         </button>
                     </div>
                  ))}
+                            <br/>
+                            <br/>
                         </div>
                     )}
 
@@ -294,6 +292,8 @@ export class IncorporationForm extends React.Component {
                         </button>
                     </div>
                 ))}
+                <br/>
+                <br/>
                 <div className="rows">
                     <div className="mainLab">
                         <h2>Open pull requests</h2>
@@ -336,6 +336,8 @@ export class IncorporationForm extends React.Component {
                         </button>
                     </div>
                 ))}
+                <br/>
+                <br/>
                 <div className="rows">
                     <div className="mainLab">
                         <h2>Commits</h2>
@@ -378,6 +380,8 @@ export class IncorporationForm extends React.Component {
                         </button>
                     </div>
                 ))}
+                <br/>
+                <br/>
                 <div className="rows">
                     <div className="mainLab">
                         <h2>New Issue</h2>
@@ -388,23 +392,13 @@ export class IncorporationForm extends React.Component {
                         {/*</Tooltip>*/}
                     </div>
                 </div>
-                {this.state.shareholdersCommits.map((shareholder, idx) => (
+                {this.state.shareholdersNewIssues.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>Create a new defect only if the issue contains this label </p>
                         <TextField id="standard-basic" label="Defect Tag"
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
-                        <div className="uslabel"></div>
-                        {/*    <Select onChange={this.handleSelectUs(idx)} labelId="label" id="simpleMenu" value="20">*/}
-                        {/*    <MenuItem key="{1}" onClick={this.handleSelectUs(idx)} value="10" >US</MenuItem>*/}
-                        {/*        <ListItemText onClick={this.handleSelectUs(idx)}></ListItemText>*/}
-                        {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
-                        {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
-                        {/*</Select>*/}
-                        <DropdownButton id="dropdown-basic-button" title="Item">
-                            <Dropdown.Item onClick={this.handleSelectUsForCommits(idx)} href="#/action-1">US/DE</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handleSelectTaskForCommits(idx)} href="#/action-2">TA</Dropdown.Item>
-                        </DropdownButton>
+
                         {shareholder.isA && !shareholder.isTaskPar && (
                             <Par />
                         )}
