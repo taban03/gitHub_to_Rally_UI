@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import update from 'react-addons-update';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Form from 'react-bootstrap/Form';
 
 const Par = () => {
     return (
