@@ -13,6 +13,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import update from 'react-addons-update';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Form from 'react-bootstrap/Form';
+
 
 const Par = () => {
     return (
@@ -23,6 +25,7 @@ const Par = () => {
         </div>
     )
 }
+
 
 const ParTask = () => {
     return (
@@ -114,9 +117,30 @@ export class IncorporationForm extends React.Component {
         // console.log(isClicked)
         return (
             <form onSubmit={this.handleSubmit}>
-
-                <h4>Configuration Form</h4>
+                <h1>Configuration Form</h1>
                 <div>
+                    <div className="initial-configuration-information">
+                        <h2>Initial configuration information</h2>
+                        <h4>GitHub</h4>
+                        <p>API key:  <TextField id="standard-basic" label="API key"/></p>
+                        <p>GitHub base URL:  <TextField id="standard-basic" label="GitHub base URL"/></p>
+                        <p>Repository:  <TextField id="standard-basic" label="Repository"/></p>
+                        <br />
+                        <br />
+                        <h4>Rally</h4>
+                        <p>API key:  <TextField id="standard-basic" label="API key"/></p>
+                        <p>Rally host:  <TextField id="standard-basic" label="Rally host"/></p>
+                        <p>Workspace:  <TextField id="standard-basic" label="Workspace"/></p>
+                        <p>Project:  <TextField id="standard-basic" label="Project"/></p>
+                        <br />
+                        <br />
+                        <h4>Initial Timestamp</h4>
+                        <Form.Control
+                        type="date"
+                        />
+                    </div>
+                    <br />
+                    <br />
                     <div className="rows">
                     <div className="mainLab">
                     <h2>Labels of pull request</h2>
