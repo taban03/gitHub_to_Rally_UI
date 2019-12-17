@@ -12,7 +12,7 @@ const Par = () => {
     return (
         <div class="flexbox-container">
             <p id="textP" >to </p>
-            <TextField id="standard-basic" label="State" />
+            <TextField onChange={this.handleStatusChange} name="state" id="standard-basic" label="State" />
         </div>
     )
 }
@@ -21,9 +21,9 @@ const ParTask = () => {
     return (
         <div class="flexbox-container">
             <p id="textP" >with  </p>
-            <TextField id="standard-basic" label="Name" />
+            <TextField onChange={this.handleStatusChange} name="taskName" id="standard-basic" label="Name" />
             <p > to </p>
-            <TextField id="standard-basic" label="State" />
+            <TextField onChange={this.handleStatusChange} name="state" id="standard-basic" label="State" />
         </div>
     )
 }
@@ -33,6 +33,12 @@ export class IncorporationForm extends React.Component {
         super(props);
 
         this.state = {
+            values: {
+                rules:
+                    {
+                        rule: "", labels: "", items: "", state: "", usId: "", taskName: "",
+                    },
+            },
             name: "",
             message: [],
             isClicked: false,
@@ -77,68 +83,45 @@ function() {
 
     };
 
-
-
-    handleStatusField(e) {
-        let value = e.target.value;
-        this.setState( prevState => ({ newUser :
-                {...prevState.newUser, name: value
-                }
-        }))
-    }
-//.
     submitForm = async e => {
+        // e.preventDefault();
+        // this.setState({isSubmitting: true});
+        // const res = await fetch("http://localhost:8080/submit", {
+        //     method: "POST",
+        //     body: JSON.stringify(this.state.values),
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     }
+        // });
+        // this.setState({isSubmitting: false});
+        // const data = await res.json();
+        // console.log(data)
+        // !data.hasOwnProperty("error")
+        //     ? this.setState({message: data.success})
+        //     : this.setState({message: data.error, isError: true});
         e.preventDefault();
-        this.setState({isSubmitting: true});
-        const res = await fetch("http://localhost:8080/submit", {
-            method: "POST",
-            body: JSON.stringify(this.state.values),
-            headers: {
-                "Content-Type": "application/json"
-            }
+
+        const data = new FormData(e.target);
+
+        fetch('http://localhost:8080/submit', {
+            method: 'POST',
+            body: data,
         });
-        this.setState({isSubmitting: false});
-        const data = await res.json();
+
         console.log(data)
-        !data.hasOwnProperty("error")
-            ? this.setState({message: data.success})
-            : this.setState({message: data.error, isError: true});
     }
+/////
 
-    handleShareholderNameChange = idx => evt => {
-        const newShareholders = this.state.shareholders.map((shareholder, sidx) => {
-            if (idx !== sidx) return shareholder;
-            return { ...shareholder, name: evt.target.value };
-        });
+    handleStatusChange(event) {
+        console.log(event.target.value)
+    // //  if(event.target.name == 'taskName')
+    // // this.setState({taskName: event.target.value});
+    // // else if (event.target.name == 'state')
+    // // this.setState({state: event.target.value});
+    // //  else if (event.target.name == 'item')
+    //      this.setState({item: event.target.value});
 
-        this.setState({ shareholders: newShareholders });
-    };
-
-    handleSubmit = evt => {
-        const { name, shareholders } = this.state;
-        const { handleAddShareholderForMergePr } = this.state;
-        alert(`Incorporated: ${name} with ${shareholders.length} shareholders`);
-    };
-
-    handleAddShareholder = () => {
-
-        this.setState({
-            shareholders: this.state.shareholders.concat([{ name: "", isA: false }])
-        });
-
-        console.log(this.state.isClicked)
-
-    };
-
-    handleAddShareholderForMergePr = () => {
-
-        this.setState({
-            handleAddShareholderForMergePr: this.state.shareholders.concat([{ name: "", isA: false }])
-        });
-
-        console.log(this.state.isClicked)
-
-    };
+         }
 
     handleRemoveShareholder = idx => () => {
         this.setState({
@@ -249,7 +232,14 @@ function() {
     render() {
         const isClicked  = this.state.isClicked ;
         console.log(this.state.shareholders)
-        // const formData = JSON.stringify(new JSONFormData(form).formData);
+
+        // const json = {};
+        // Array.from(formData.entries()).forEach(([key, value]) => {
+        //     json[key] = value;
+        // })
+
+        // JSON.stringify(json)
+
         return (
             <form onSubmit={this.submitForm}>
 
@@ -279,7 +269,7 @@ function() {
                     <br />
                     <div className="rows">
                     <div className="mainLab">
-                    <h2>Labels of pull request</h2>
+                    <h2 name="labels">Labels of pull request</h2>
                 {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholder}>*/}
                 {/*    <Fab color="primary" >*/}
                 {/*        <AddIcon/>*/}
@@ -292,7 +282,7 @@ function() {
                 {this.state.shareholders.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>When a label </p>
-                        <TextField id="standard-basic" label="PR"
+                        <TextField name="labelName" id="standard-basic" label="PR"
                                    // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p>exists in a pull request, then move the</p>
@@ -303,7 +293,7 @@ function() {
                     {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
                     {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                     {/*</Select>*/}
-                        <DropdownButton id="dropdown-basic-button" title="Item">
+                        <DropdownButton onChange={this.handleStatusChange} name="item" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item onClick={this.handleSelectUs(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleSelectTask(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
@@ -352,7 +342,7 @@ function() {
                         {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
                         {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                         {/*</Select>*/}
-                        <DropdownButton id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="item" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item onClick={this.handleSelectUsForMergedPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleSelectTaskForMergedPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
@@ -376,7 +366,7 @@ function() {
                 <br/>
                 <div className="rows">
                     <div className="mainLab">
-                        <h2>Open pull requests</h2>
+                        <h2 name="openPR">Open pull requests</h2>
                         {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholderForMergePr}>*/}
                         {/*    <Fab color="primary" >*/}
                         {/*        <AddIcon/>*/}
@@ -394,7 +384,7 @@ function() {
                         {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
                         {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                         {/*</Select>*/}
-                        <DropdownButton id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="item" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item onClick={this.handleSelectUsForOpenPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleSelectTaskForOpenPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
@@ -420,7 +410,7 @@ function() {
                 <br/>
                 <div className="rows">
                     <div className="mainLab">
-                        <h2>Commits</h2>
+                        <h2 name="commits">Commits</h2>
                         {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholderForMergePr}>*/}
                         {/*    <Fab color="primary" >*/}
                         {/*        <AddIcon/>*/}
@@ -438,7 +428,7 @@ function() {
                         {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
                         {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                         {/*</Select>*/}
-                        <DropdownButton id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="item" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item onClick={this.handleSelectUsForCommits(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleSelectTaskForCommits(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
@@ -462,7 +452,7 @@ function() {
                 <br/>
                 <div className="rows">
                     <div className="mainLab">
-                        <h2>New Issue</h2>
+                        <h2 name="issues">New Issue</h2>
                         {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholderForMergePr}>*/}
                         {/*    <Fab color="primary" >*/}
                         {/*        <AddIcon/>*/}
@@ -497,7 +487,7 @@ function() {
                 ))}
                 <div className="rows">
                     <div className="mainLab">
-                        <h2>Ready</h2>
+                        <h2 name="ready">Ready</h2>
                         {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholderForMergePr}>*/}
                         {/*    <Fab color="primary" >*/}
                         {/*        <AddIcon/>*/}
@@ -512,7 +502,7 @@ function() {
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> and the task with name </p>
-                        <TextField id="standard-basic" label="Task name "
+                        <TextField onChange={this.handleStatusChange} id="standard-basic" label="Task name "
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> is in state </p>
