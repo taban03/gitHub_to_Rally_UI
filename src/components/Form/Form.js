@@ -8,37 +8,44 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 
-const Par = () => {
+const Par = (props) => {
+    console.log(props.onChange)
     return (
         <div class="flexbox-container">
             <p id="textP" >to </p>
-            <TextField onChange={this.handleStatusChange} name="state" id="standard-basic" label="State" />
+            <TextField onChange={props.onChange} name="state" id="standard-basic" label="State" />
         </div>
     )
 }
 
-const ParTask = () => {
+const ParTask = (props) => {
     return (
         <div class="flexbox-container">
             <p id="textP" >with  </p>
-            <TextField onChange={this.handleStatusChange} name="taskName" id="standard-basic" label="Name" />
+            <TextField onChange={props.func} name="taskName" id="standard-basic" label="Name" />
             <p > to </p>
-            <TextField onChange={this.handleStatusChange} name="state" id="standard-basic" label="State" />
+            <TextField onChange={props.func} name="state" id="standard-basic" label="State" />
         </div>
     )
 }
+
 export class IncorporationForm extends React.Component {
     constructor(props) {
 
         super(props);
 
         this.state = {
-            values: {
-                rules:
-                    {
-                        rule: "", labels: "", items: "", state: "", usId: "", taskName: "",
-                    },
-            },
+            // values: {
+            //     rules:
+            //         {
+            //             rule: "", labels: "", items: "", state: "", usId: "", taskName: "",
+            //         },
+            // },
+            rule: "",
+            labels: "", items: "",
+            state: "",
+            usId: "",
+            taskName: "",
             name: "",
             message: [],
             isClicked: false,
@@ -112,17 +119,38 @@ function() {
     }
 /////
 
-    handleStatusChange(event) {
-        console.log(event.target.value)
-    // //  if(event.target.name == 'taskName')
-    // // this.setState({taskName: event.target.value});
-    // // else if (event.target.name == 'state')
-    // // this.setState({state: event.target.value});
-    // //  else if (event.target.name == 'item')
-    //      this.setState({item: event.target.value});
+    // handleStatusChange(event) {
+    //     this.setState({[event.target.id]: event.target.value},
+    //         () => {
+    //             if (event.target.name === 'taskName') {
+    //                 this.setState({ taskName: event.target.value});
+    //             }  else if (event.target.name === 'state') {
+    //                 this.setState({ enabled: false });
+    //             }  else if (event.target.name === 'item') {
+    //                 this.setState({item: event.target.value});
+    //             }
+    //         }
+    //     );
+    //     console.log("cison")
+    //     console.log(event.target.value)
+    //     console.log(event.target.name)
+    // //  if(event.target.name === 'taskName') {
+    // //      this.setState({taskName: event.target.value});
+    // //  }
+    // // else if (event.target.name === 'state') {
+    // //      this.setState({state: event.target.value});
+    // //  }
+    // //  else if (event.target.name === 'item') {
+    // //      this.setState({item: event.target.value});
+    // //  }
+    //      }
 
-         }
+    handleStatusChange = (event) => {
+        let name = event.target.name;
+        console.log(name)
+        this.setState({[name]: event.target.value});
 
+    }
     handleRemoveShareholder = idx => () => {
         this.setState({
             shareholders: this.state.shareholders.filter((s, sidx) => idx !== sidx)
@@ -230,9 +258,8 @@ function() {
     };
 
     render() {
-        const isClicked  = this.state.isClicked ;
-        console.log(this.state.shareholders)
-
+        const isClicked  = this.state.isClicked;
+        console.log(this.state)
         // const json = {};
         // Array.from(formData.entries()).forEach(([key, value]) => {
         //     json[key] = value;
@@ -298,10 +325,10 @@ function() {
                             <Dropdown.Item onClick={this.handleSelectTask(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par />
+                            <Par onChange={this.handleStatusChange} />
                         )}
                         {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask />
+                            <ParTask onChange={this.handleStatusChange} />
                         )}
 
                         <button
@@ -347,10 +374,10 @@ function() {
                             <Dropdown.Item onClick={this.handleSelectTaskForMergedPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par />
+                            <Par onChange={this.handleStatusChange}/>
                         )}
                         {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask />
+                            <ParTask onChange={this.handleStatusChange}/>
                         )}
 
                         <button
@@ -389,10 +416,10 @@ function() {
                             <Dropdown.Item onClick={this.handleSelectTaskForOpenPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par />
+                            <Par onChange={this.handleStatusChange}/>
                         )}
                         {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask />
+                            <ParTask onChange={this.handleStatusChange} />
                         )}
 
 
@@ -433,10 +460,10 @@ function() {
                             <Dropdown.Item onClick={this.handleSelectTaskForCommits(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par />
+                            <Par func={this.handleStatusChange} />
                         )}
                         {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask />
+                            <ParTask func={this.handleStatusChange} />
                         )}
 
                         <button
@@ -468,10 +495,10 @@ function() {
                         />
 
                         {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par />
+                            <Par func={this.handleStatusChange}/>
                         )}
                         {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask />
+                            <ParTask func={this.handleStatusChange}/>
                         )}
 
 
@@ -498,15 +525,15 @@ function() {
                 {this.state.shareholdersCommits.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>When the story state of US is </p>
-                        <TextField id="standard-basic" label="US ID"
+                        <TextField name="usId" id="standard-basic" label="US ID"
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> and the task with name </p>
-                        <TextField onChange={this.handleStatusChange} id="standard-basic" label="Task name "
+                        <TextField name="taskName" onChange={this.handleStatusChange} id="standard-basic" label="Task name "
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> is in state </p>
-                        <TextField id="standard-basic" label="Task state "
+                        <TextField name="state" id="standard-basic" label="Task state "
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> then mark it as ready. </p>
@@ -517,10 +544,10 @@ function() {
                         {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                         {/*</Select>*/}
                         {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par />
+                            <Par onChange={this.handleStatusChange} />
                         )}
                         {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask />
+                            <ParTask onChange={this.handleStatusChange} />
                         )}
 
 
