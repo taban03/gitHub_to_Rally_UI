@@ -38,7 +38,7 @@ export class IncorporationForm extends React.Component {
             rule: "",
             labels: "",
             items: "",
-            state: "",
+            status: "",
             api_key: "",
             rally_host: "",
             workspace: "",
@@ -81,21 +81,21 @@ export class IncorporationForm extends React.Component {
                 },
                 "rules": {
                     "commit": [
-                        {"item": this.state.items, "action": this.state.state},
+                        {"item": this.state.items, "action": this.state.status},
                     ],
                     "open-pull-request": [
-                        {"item": this.state.items, "action": this.state.state},
+                        {"item": this.state.items, "action": this.state.status},
                     ],
                     "merged-pull-request": [
-                        {"item": this.state.items, "action": this.state.state},
+                        {"item": this.state.items, "action": this.state.status},
                     ],
                     "labels": [
-                        {"labelName": this.state.state, "item": this.name, "action": this.state.state},
+                        {"labelName": this.state.status, "item": this.name, "action": this.state.status},
                     ],
                     "ready": [
                         {
-                            "story-state": this.state, "conditions": [
-                                {"item": this.state.name, "state": this.state.state}
+                            "story-state": this.state.status, "conditions": [
+                                {"item": this.state.name, "state": this.state.status}
                             ]
                         }],
                     "new-issue": []
@@ -111,6 +111,8 @@ export class IncorporationForm extends React.Component {
 
     handleStatusChange = (event) => {
         let name = event.target.name;
+        if (name === "state")
+            name = "status";
         console.log(name)
         this.setState({[name]: event.target.value});
 
