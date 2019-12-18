@@ -35,12 +35,6 @@ export class IncorporationForm extends React.Component {
         super(props);
 
         this.state = {
-            // values: {
-            //     rules:
-            //         {
-            //             rule: "", labels: "", items: "", state: "", usId: "", taskName: "",
-            //         },
-            // },
             rule: "",
             labels: "",
             items: "",
@@ -70,7 +64,7 @@ export class IncorporationForm extends React.Component {
 
     submitForm = async e => {
         e.preventDefault();
-        this.setState({isSubmitting: true});
+        // this.setState({isSubmitting: true});
         const res = await fetch("http://localhost:8080/submit", {
             method: "POST",
             body: JSON.stringify({
@@ -111,49 +105,19 @@ export class IncorporationForm extends React.Component {
                 "Content-Type": "application/json"
             }
         });
-        this.setState({isSubmitting: false});
-        // console.log(res)
-        // const data = await res.json();
-        // console.log(data)
-        // !data.hasOwnProperty("error")
-        //     ? this.setState({message: data.success})
-        //     : this.setState({message: data.error, isError: true});
-
 
         console.log(res)
     }
-/////
-
-    // handleStatusChange(event) {
-    //     this.setState({[event.target.id]: event.target.value},
-    //         () => {
-    //             if (event.target.name === 'taskName') {
-    //                 this.setState({ taskName: event.target.value});
-    //             }  else if (event.target.name === 'state') {
-    //                 this.setState({ enabled: false });
-    //             }  else if (event.target.name === 'item') {
-    //                 this.setState({item: event.target.value});
-    //             }
-    //         }
-    //     );
-    //     console.log("cison")
-    //     console.log(event.target.value)
-    //     console.log(event.target.name)
-    // //  if(event.target.name === 'taskName') {
-    // //      this.setState({taskName: event.target.value});
-    // //  }
-    // // else if (event.target.name === 'state') {
-    // //      this.setState({state: event.target.value});
-    // //  }
-    // //  else if (event.target.name === 'item') {
-    // //      this.setState({item: event.target.value});
-    // //  }
-    //      }
 
     handleStatusChange = (event) => {
         let name = event.target.name;
         console.log(name)
         this.setState({[name]: event.target.value});
+
+    }
+    handleStatusChangeDropdown = (event, data) => {
+        console.log(data.value)
+        this.setState({items: data});
 
     }
     handleRemoveShareholder = idx => () => {
@@ -164,8 +128,6 @@ export class IncorporationForm extends React.Component {
     };
 
      handleSelectUs = idx => () => {
-        console.log("ciao")
-
          this.setState({
         shareholders: update(this.state.shareholders, {[idx]: {isA: {$set: true}}})
 
@@ -200,13 +162,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTask = idx => () => {
-        console.log("ciao")
-        // if (this.state.shareholders.isA) {
-        //     this.setState({
-        //         shareholders: update(this.state.shareholders, {[idx]: {isA: {$set: false}}})
-        //
-        //     });
-        // }
+
         this.setState({
             shareholders: update(this.state.shareholders, {[idx]: {isTaskPar: {$set: true}}})
 
@@ -215,13 +171,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTaskForMergedPr = idx => () => {
-        console.log("ciao")
-        // if (this.state.shareholders.isA) {
-        //     this.setState({
-        //         shareholders: update(this.state.shareholders, {[idx]: {isA: {$set: false}}})
-        //
-        //     });
-        // }
+
         this.setState({
             shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isTaskPar: {$set: true}}})
 
@@ -230,13 +180,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTaskForOpenPr = idx => () => {
-        console.log("ciao")
-        // if (this.state.shareholders.isA) {
-        //     this.setState({
-        //         shareholders: update(this.state.shareholders, {[idx]: {isA: {$set: false}}})
-        //
-        //     });
-        // }
+
         this.setState({
             shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isTaskPar: {$set: true}}})
 
@@ -245,13 +189,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTaskForCommits = idx => () => {
-        console.log("ciao")
-        // if (this.state.shareholders.isA) {
-        //     this.setState({
-        //         shareholders: update(this.state.shareholders, {[idx]: {isA: {$set: false}}})
-        //
-        //     });
-        // }
+
         this.setState({
             shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isTaskPar: {$set: true}}})
 
@@ -265,12 +203,6 @@ export class IncorporationForm extends React.Component {
     render() {
         const isClicked  = this.state.isClicked;
         console.log(this.state)
-        // const json = {};
-        // Array.from(formData.entries()).forEach(([key, value]) => {
-        //     json[key] = value;
-        // })
-
-        // JSON.stringify(json)
 
         return (
             <form onSubmit={this.submitForm}>
@@ -314,8 +246,8 @@ export class IncorporationForm extends React.Component {
                 {this.state.shareholders.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>When a label </p>
-                        <TextField name="labelName" id="standard-basic" label="PR"
-                                   // onChange={this.handleShareholderNameChange(idx)}
+                        <TextField name="labels" id="standard-basic" label="PR"
+                                   onChange={this.handleStatusChange}
                         />
                         <p>exists in a pull request, then move the</p>
                         <div className="uslabel"></div>
@@ -325,9 +257,9 @@ export class IncorporationForm extends React.Component {
                     {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
                     {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                     {/*</Select>*/}
-                        <DropdownButton onChange={this.handleStatusChange} name="item" id="dropdown-basic-button" title="Item">
-                            <Dropdown.Item onClick={this.handleSelectUs(idx)} href="#/action-1">US/DE</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handleSelectTask(idx)} href="#/action-2">TA</Dropdown.Item>
+                        <DropdownButton  onChange={this.handleStatusChangeDropdown} name="items" id="dropdown-basic-button" title="Item">
+                            <Dropdown.Item name="items" onChange={this.handleStatusChangeDropdown} onClick={this.handleSelectUs(idx)} href="#/action-1">US/DE</Dropdown.Item>
+                            <Dropdown.Item name="items" onChange={this.handleStatusChangeDropdown} onClick={this.handleSelectTask(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isA && !shareholder.isTaskPar && (
                             <Par onChange={this.handleStatusChange} />
@@ -374,7 +306,7 @@ export class IncorporationForm extends React.Component {
                         {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
                         {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                         {/*</Select>*/}
-                        <DropdownButton name="item" id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="items" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item onClick={this.handleSelectUsForMergedPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleSelectTaskForMergedPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
@@ -416,7 +348,7 @@ export class IncorporationForm extends React.Component {
                         {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
                         {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                         {/*</Select>*/}
-                        <DropdownButton name="item" id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="items" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item onClick={this.handleSelectUsForOpenPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleSelectTaskForOpenPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
@@ -460,7 +392,7 @@ export class IncorporationForm extends React.Component {
                         {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
                         {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                         {/*</Select>*/}
-                        <DropdownButton name="item" id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="items" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item onClick={this.handleSelectUsForCommits(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleSelectTaskForCommits(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
