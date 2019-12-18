@@ -117,11 +117,8 @@ export class IncorporationForm extends React.Component {
         this.setState({[name]: event.target.value});
 
     }
-    handleStatusChangeDropdown = (event, data) => {
-        console.log(data.value)
-        this.setState({items: data});
 
-    }
+
     handleRemoveShareholder = idx => () => {
         this.setState({
             shareholders: this.state.shareholders.filter((s, sidx) => idx !== sidx)
@@ -130,6 +127,7 @@ export class IncorporationForm extends React.Component {
     };
 
      handleSelectUs = idx => () => {
+         this.setState({items: "US/DE"});
          this.setState({
         shareholders: update(this.state.shareholders, {[idx]: {isA: {$set: true}}})
 
@@ -138,7 +136,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectUsForMergedPr = idx => () => {
-
+        this.setState({items: "US/DE"});
         this.setState({
             shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isA: {$set: true}}})
 
@@ -147,7 +145,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectUsForOpenPr = idx => () => {
-
+        this.setState({items: "US/DE"});
         this.setState({
             shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isA: {$set: true}}})
 
@@ -155,7 +153,7 @@ export class IncorporationForm extends React.Component {
 
     }
     handleSelectUsForCommits = idx => () => {
-
+        this.setState({items: "US/DE"});
         this.setState({
             shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isA: {$set: true}}})
 
@@ -164,7 +162,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTask = idx => () => {
-
+        this.setState({items: "TA"});
         this.setState({
             shareholders: update(this.state.shareholders, {[idx]: {isTaskPar: {$set: true}}})
 
@@ -173,7 +171,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTaskForMergedPr = idx => () => {
-
+        this.setState({items: "TA"});
         this.setState({
             shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isTaskPar: {$set: true}}})
 
@@ -182,7 +180,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTaskForOpenPr = idx => () => {
-
+        this.setState({items: "TA"});
         this.setState({
             shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isTaskPar: {$set: true}}})
 
@@ -191,7 +189,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTaskForCommits = idx => () => {
-
+        this.setState({items: "TA"});
         this.setState({
             shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isTaskPar: {$set: true}}})
 
@@ -259,9 +257,9 @@ export class IncorporationForm extends React.Component {
                     {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
                     {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                     {/*</Select>*/}
-                        <DropdownButton  onChange={this.handleStatusChangeDropdown} name="items" id="dropdown-basic-button" title="Item">
-                            <Dropdown.Item name="items" onChange={this.handleStatusChangeDropdown} onClick={this.handleSelectUs(idx)} href="#/action-1">US/DE</Dropdown.Item>
-                            <Dropdown.Item name="items" onChange={this.handleStatusChangeDropdown} onClick={this.handleSelectTask(idx)} href="#/action-2">TA</Dropdown.Item>
+                        <DropdownButton name="items" id="dropdown-basic-button" title="Item">
+                            <Dropdown.Item name="items" onClick={this.handleSelectUs(idx)} href="#/action-1">US/DE</Dropdown.Item>
+                            <Dropdown.Item name="items" onClick={this.handleSelectTask(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isA && !shareholder.isTaskPar && (
                             <Par onChange={this.handleStatusChange} />
@@ -309,8 +307,8 @@ export class IncorporationForm extends React.Component {
                         {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                         {/*</Select>*/}
                         <DropdownButton name="items" id="dropdown-basic-button" title="Item">
-                            <Dropdown.Item onClick={this.handleSelectUsForMergedPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handleSelectTaskForMergedPr(idx)} href="#/action-2">TA</Dropdown.Item>
+                            <Dropdown.Item  onClick={this.handleSelectUsForMergedPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
+                            <Dropdown.Item  onClick={this.handleSelectTaskForMergedPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isA && !shareholder.isTaskPar && (
                             <Par onChange={this.handleStatusChange}/>
@@ -351,8 +349,8 @@ export class IncorporationForm extends React.Component {
                         {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
                         {/*</Select>*/}
                         <DropdownButton name="items" id="dropdown-basic-button" title="Item">
-                            <Dropdown.Item onClick={this.handleSelectUsForOpenPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
-                            <Dropdown.Item onClick={this.handleSelectTaskForOpenPr(idx)} href="#/action-2">TA</Dropdown.Item>
+                            <Dropdown.Item  onClick={this.handleSelectUsForOpenPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
+                            <Dropdown.Item  onClick={this.handleSelectTaskForOpenPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isA && !shareholder.isTaskPar && (
                             <Par onChange={this.handleStatusChange}/>

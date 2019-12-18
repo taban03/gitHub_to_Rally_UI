@@ -15,14 +15,14 @@ app.get("/", (req, res) => {
 app.post("/submit", (req, res) => {
     const validation_result = validationResult(req);
     if(validation_result.isEmpty() === true){
-        console.log("good")
+        console.log("Submit successful!")
         //User has filled in all the form fields correctly
     }
     else{
-        console.log("bad")
+        console.log("Something went wrong!")
         //User has entered some invalid input values
     }
-    fs.writeFile("./test.txt", JSON.stringify(req.body), function(err) {
+    fs.writeFile("./conf.json", JSON.stringify(req.body), function(err) {
         if(err) {
             return console.log(err);
         }
