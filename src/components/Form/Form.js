@@ -112,14 +112,15 @@ export class IncorporationForm extends React.Component {
             }
         });
         this.setState({isSubmitting: false});
-        const data = await res.json();
-        console.log(data)
-        !data.hasOwnProperty("error")
-            ? this.setState({message: data.success})
-            : this.setState({message: data.error, isError: true});
+        // console.log(res)
+        // const data = await res.json();
+        // console.log(data)
+        // !data.hasOwnProperty("error")
+        //     ? this.setState({message: data.success})
+        //     : this.setState({message: data.error, isError: true});
 
 
-        console.log(data)
+        console.log(res)
     }
 /////
 
