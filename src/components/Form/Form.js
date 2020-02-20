@@ -8,7 +8,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 
-const Par = (props) => {
+const Par1 = (props) => {
     console.log(props.onChange)
     return (
         <div class="flexbox-container">
@@ -18,7 +18,7 @@ const Par = (props) => {
     )
 }
 
-const ParTask = (props) => {
+const Par2 = (props) => {
     return (
         <div class="flexbox-container">
             <p id="textP" >with  </p>
@@ -50,11 +50,11 @@ export class IncorporationForm extends React.Component {
             name: "",
             message: [],
             isClicked: false,
-            shareholders: [{ name: "", isA: false, isTaskPar: false, and: "text" }],
-            shareholdersMergedPr: [{ name: "", isA: false, isTaskPar: false, and: "text" }],
-            shareholdersOpenPr: [{ name: "", isA: false, isTaskPar: false, and: "text" }],
-            shareholdersCommits: [{ name: "", isA: false, isTaskPar: false, and: "text" }],
-            shareholdersNewIssues: [{ name: "", isA: false, isTaskPar: false, and: "text" }]
+            shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
+            shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
+            shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
+            shareholdersCommits: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
+            shareholdersNewIssues: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }]
         };
 
     }
@@ -128,43 +128,31 @@ export class IncorporationForm extends React.Component {
 
      handleSelectUs = idx => () => {
          this.setState({items: "US/DE"});
+
          this.setState({
-        shareholders: update(this.state.shareholders, {[idx]: {isA: {$set: true}}})
+        shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}} })
 
          });
+         console.log(this.state.shareholders[idx].isSelectedPar1);
+         console.log(this.state.shareholders[idx].isSelectedPar2);
+
+    }
+
+    handleSelectTask = idx => () => {
+        this.setState({items: "TA"});
+
+        this.setState({
+            shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}} })
+
+        });
+
 
     }
 
     handleSelectUsForMergedPr = idx => () => {
         this.setState({items: "US/DE"});
         this.setState({
-            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isA: {$set: true}}})
-
-        });
-
-    }
-
-    handleSelectUsForOpenPr = idx => () => {
-        this.setState({items: "US/DE"});
-        this.setState({
-            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isA: {$set: true}}})
-
-        });
-
-    }
-    handleSelectUsForCommits = idx => () => {
-        this.setState({items: "US/DE"});
-        this.setState({
-            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isA: {$set: true}}})
-
-        });
-
-    }
-
-    handleSelectTask = idx => () => {
-        this.setState({items: "TA"});
-        this.setState({
-            shareholders: update(this.state.shareholders, {[idx]: {isTaskPar: {$set: true}}})
+            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
 
         });
 
@@ -173,25 +161,43 @@ export class IncorporationForm extends React.Component {
     handleSelectTaskForMergedPr = idx => () => {
         this.setState({items: "TA"});
         this.setState({
-            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isTaskPar: {$set: true}}})
+            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
 
         });
 
     }
+
+    handleSelectUsForOpenPr = idx => () => {
+        this.setState({items: "US/DE"});
+        this.setState({
+            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
+
+        });
+
+     }
 
     handleSelectTaskForOpenPr = idx => () => {
         this.setState({items: "TA"});
         this.setState({
-            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isTaskPar: {$set: true}}})
+            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
+
+        });
+
+    }
+    handleSelectUsForCommits = idx => () => {
+        this.setState({items: "US/DE"});
+        this.setState({
+            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
 
         });
 
     }
 
+
     handleSelectTaskForCommits = idx => () => {
         this.setState({items: "TA"});
         this.setState({
-            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isTaskPar: {$set: true}}})
+            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
 
         });
 
@@ -234,11 +240,6 @@ export class IncorporationForm extends React.Component {
                     <div className="rows">
                     <div className="mainLab">
                     <h2 name="labels">Labels of pull request</h2>
-                {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholder}>*/}
-                {/*    <Fab color="primary" >*/}
-                {/*        <AddIcon/>*/}
-                {/*    </Fab>*/}
-                {/*</Tooltip>*/}
                     </div>
                     </div>
                     {!isClicked && (
@@ -251,21 +252,15 @@ export class IncorporationForm extends React.Component {
                         />
                         <p>exists in a pull request, then move the</p>
                         <div className="uslabel"></div>
-                    {/*    <Select onChange={this.handleSelectUs(idx)} labelId="label" id="simpleMenu" value="20">*/}
-                    {/*    <MenuItem key="{1}" onClick={this.handleSelectUs(idx)} value="10" >US</MenuItem>*/}
-                    {/*        <ListItemText onClick={this.handleSelectUs(idx)}></ListItemText>*/}
-                    {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
-                    {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
-                    {/*</Select>*/}
                         <DropdownButton name="items" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item name="items" onClick={this.handleSelectUs(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item name="items" onClick={this.handleSelectTask(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
-                        {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par onChange={this.handleStatusChange} />
+                        {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
+                            <Par1 onChange={this.handleStatusChange} />
                         )}
-                        {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask onChange={this.handleStatusChange} />
+                        {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 &&(
+                            <Par2 onChange={this.handleStatusChange} />
                         )}
 
                         <button
@@ -289,32 +284,21 @@ export class IncorporationForm extends React.Component {
                 <div className="rows">
                     <div className="mainLab">
                         <h2>Merged pull requests</h2>
-                        {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholderForMergePr}>*/}
-                        {/*    <Fab color="primary" >*/}
-                        {/*        <AddIcon/>*/}
-                        {/*    </Fab>*/}
-                        {/*</Tooltip>*/}
                     </div>
                 </div>
                 {this.state.shareholdersMergedPr.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>Move the </p>
                         <div className="uslabel"></div>
-                        {/*    <Select onChange={this.handleSelectUs(idx)} labelId="label" id="simpleMenu" value="20">*/}
-                        {/*    <MenuItem key="{1}" onClick={this.handleSelectUs(idx)} value="10" >US</MenuItem>*/}
-                        {/*        <ListItemText onClick={this.handleSelectUs(idx)}></ListItemText>*/}
-                        {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
-                        {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
-                        {/*</Select>*/}
                         <DropdownButton name="items" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item  onClick={this.handleSelectUsForMergedPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item  onClick={this.handleSelectTaskForMergedPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
-                        {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par onChange={this.handleStatusChange}/>
+                        {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
+                            <Par1 onChange={this.handleStatusChange}/>
                         )}
-                        {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask onChange={this.handleStatusChange}/>
+                        {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
+                            <Par2 onChange={this.handleStatusChange}/>
                         )}
 
                         <button
@@ -331,32 +315,21 @@ export class IncorporationForm extends React.Component {
                 <div className="rows">
                     <div className="mainLab">
                         <h2 name="openPR">Open pull requests</h2>
-                        {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholderForMergePr}>*/}
-                        {/*    <Fab color="primary" >*/}
-                        {/*        <AddIcon/>*/}
-                        {/*    </Fab>*/}
-                        {/*</Tooltip>*/}
                     </div>
                 </div>
                 {this.state.shareholdersOpenPr.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>Move the </p>
                         <div className="uslabel"></div>
-                        {/*    <Select onChange={this.handleSelectUs(idx)} labelId="label" id="simpleMenu" value="20">*/}
-                        {/*    <MenuItem key="{1}" onClick={this.handleSelectUs(idx)} value="10" >US</MenuItem>*/}
-                        {/*        <ListItemText onClick={this.handleSelectUs(idx)}></ListItemText>*/}
-                        {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
-                        {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
-                        {/*</Select>*/}
                         <DropdownButton name="items" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item  onClick={this.handleSelectUsForOpenPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item  onClick={this.handleSelectTaskForOpenPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
-                        {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par onChange={this.handleStatusChange}/>
+                        {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
+                            <Par1 onChange={this.handleStatusChange}/>
                         )}
-                        {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask onChange={this.handleStatusChange} />
+                        {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
+                            <Par2 onChange={this.handleStatusChange} />
                         )}
 
 
@@ -375,32 +348,21 @@ export class IncorporationForm extends React.Component {
                 <div className="rows">
                     <div className="mainLab">
                         <h2 name="commits">Commits</h2>
-                        {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholderForMergePr}>*/}
-                        {/*    <Fab color="primary" >*/}
-                        {/*        <AddIcon/>*/}
-                        {/*    </Fab>*/}
-                        {/*</Tooltip>*/}
                     </div>
                 </div>
                 {this.state.shareholdersCommits.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>Move the </p>
                         <div className="uslabel"></div>
-                        {/*    <Select onChange={this.handleSelectUs(idx)} labelId="label" id="simpleMenu" value="20">*/}
-                        {/*    <MenuItem key="{1}" onClick={this.handleSelectUs(idx)} value="10" >US</MenuItem>*/}
-                        {/*        <ListItemText onClick={this.handleSelectUs(idx)}></ListItemText>*/}
-                        {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
-                        {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
-                        {/*</Select>*/}
                         <DropdownButton name="items" id="dropdown-basic-button" title="Item">
                             <Dropdown.Item onClick={this.handleSelectUsForCommits(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleSelectTaskForCommits(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
-                        {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par func={this.handleStatusChange} />
+                        {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
+                            <Par1 func={this.handleStatusChange} />
                         )}
-                        {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask func={this.handleStatusChange} />
+                        {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
+                            <Par2 func={this.handleStatusChange} />
                         )}
 
                         <button
@@ -417,11 +379,6 @@ export class IncorporationForm extends React.Component {
                 <div className="rows">
                     <div className="mainLab">
                         <h2 name="issues">New Issue</h2>
-                        {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholderForMergePr}>*/}
-                        {/*    <Fab color="primary" >*/}
-                        {/*        <AddIcon/>*/}
-                        {/*    </Fab>*/}
-                        {/*</Tooltip>*/}
                     </div>
                 </div>
                 {this.state.shareholdersNewIssues.map((shareholder, idx) => (
@@ -431,11 +388,11 @@ export class IncorporationForm extends React.Component {
                             onChange={this.handleStatusChange}
                         />
 
-                        {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par func={this.handleStatusChange}/>
+                        {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
+                            <Par1 func={this.handleStatusChange}/>
                         )}
-                        {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask func={this.handleStatusChange}/>
+                        {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
+                            <Par2 func={this.handleStatusChange}/>
                         )}
 
 
@@ -452,11 +409,6 @@ export class IncorporationForm extends React.Component {
                 <div className="rows">
                     <div className="mainLab">
                         <h2 name="ready">Ready</h2>
-                        {/*<Tooltip title="Add" aria-label="add" onClick={this.handleAddShareholderForMergePr}>*/}
-                        {/*    <Fab color="primary" >*/}
-                        {/*        <AddIcon/>*/}
-                        {/*    </Fab>*/}
-                        {/*</Tooltip>*/}
                     </div>
                 </div>
                 {this.state.shareholdersCommits.map((shareholder, idx) => (
@@ -474,17 +426,11 @@ export class IncorporationForm extends React.Component {
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> then mark it as ready. </p>
-                        {/*    <Select onChange={this.handleSelectUs(idx)} labelId="label" id="simpleMenu" value="20">*/}
-                        {/*    <MenuItem key="{1}" onClick={this.handleSelectUs(idx)} value="10" >US</MenuItem>*/}
-                        {/*        <ListItemText onClick={this.handleSelectUs(idx)}></ListItemText>*/}
-                        {/*    <MenuItem key="{2}" value="10">DE</MenuItem>*/}
-                        {/*    <MenuItem key="{3}" value="10">TA</MenuItem>*/}
-                        {/*</Select>*/}
-                        {shareholder.isA && !shareholder.isTaskPar && (
-                            <Par onChange={this.handleStatusChange} />
+                        {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
+                            <Par1 onChange={this.handleStatusChange} />
                         )}
-                        {shareholder.isTaskPar && !shareholder.isA && (
-                            <ParTask onChange={this.handleStatusChange} />
+                        {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
+                            <Par2 onChange={this.handleStatusChange} />
                         )}
 
 
