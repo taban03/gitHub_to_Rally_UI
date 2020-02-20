@@ -50,6 +50,10 @@ export class IncorporationForm extends React.Component {
             name: "",
             message: [],
             isClicked: false,
+            DropdownButtonLPRTitle: "Item",
+            DropdownButtonMergeTitle: "Item",
+            DropdownButtonOPRTitle: "Item",
+            DropdownButtonCommitsTitle: "Item",
             shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
             shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
             shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
@@ -133,6 +137,8 @@ export class IncorporationForm extends React.Component {
         shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}} })
 
          });
+
+         this.setState({DropdownButtonLPRTitle: "US/DE"});
          console.log(this.state.shareholders[idx].isSelectedPar1);
          console.log(this.state.shareholders[idx].isSelectedPar2);
 
@@ -145,7 +151,7 @@ export class IncorporationForm extends React.Component {
             shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}} })
 
         });
-
+        this.setState({DropdownButtonLPRTitle: "TA"});
 
     }
 
@@ -155,7 +161,7 @@ export class IncorporationForm extends React.Component {
             shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
 
         });
-
+        this.setState({DropdownButtonMergeTitle: "US/DE"});
     }
 
     handleSelectTaskForMergedPr = idx => () => {
@@ -164,7 +170,7 @@ export class IncorporationForm extends React.Component {
             shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
 
         });
-
+        this.setState({DropdownButtonMergeTitle: "TA"});
     }
 
     handleSelectUsForOpenPr = idx => () => {
@@ -173,7 +179,7 @@ export class IncorporationForm extends React.Component {
             shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
 
         });
-
+        this.setState({DropdownButtonOPRTitle: "US/DE"});
      }
 
     handleSelectTaskForOpenPr = idx => () => {
@@ -182,7 +188,7 @@ export class IncorporationForm extends React.Component {
             shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
 
         });
-
+        this.setState({DropdownButtonOPRTitle: "TA"});
     }
     handleSelectUsForCommits = idx => () => {
         this.setState({items: "US/DE"});
@@ -190,7 +196,7 @@ export class IncorporationForm extends React.Component {
             shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
 
         });
-
+        this.setState({DropdownButtonCommitsTitle: "US/DE"});
     }
 
 
@@ -200,7 +206,7 @@ export class IncorporationForm extends React.Component {
             shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
 
         });
-
+        this.setState({DropdownButtonCommitsTitle: "TA"});
     }
     onSelectChange = event => {
         console.log("onSelectChange");
@@ -247,12 +253,12 @@ export class IncorporationForm extends React.Component {
                 {this.state.shareholders.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>When a label </p>
-                        <TextField name="labels" id="standard-basic" label="PR"
+                        <TextField name="labels" id="standard-basic" label="Label name"
                                    onChange={this.handleStatusChange}
                         />
                         <p>exists in a pull request, then move the</p>
                         <div className="uslabel"></div>
-                        <DropdownButton name="items" id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="items" id="dropdown-basic-button" title={this.state.DropdownButtonLPRTitle}>
                             <Dropdown.Item name="items" onClick={this.handleSelectUs(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item name="items" onClick={this.handleSelectTask(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
@@ -283,7 +289,7 @@ export class IncorporationForm extends React.Component {
                     <div className="shareholder">
                         <p>Move the </p>
                         <div className="uslabel"></div>
-                        <DropdownButton name="items" id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="items" id="dropdown-basic-button" title={this.state.DropdownButtonMergeTitle}>
                             <Dropdown.Item  onClick={this.handleSelectUsForMergedPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item  onClick={this.handleSelectTaskForMergedPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
@@ -307,7 +313,7 @@ export class IncorporationForm extends React.Component {
                     <div className="shareholder">
                         <p>Move the </p>
                         <div className="uslabel"></div>
-                        <DropdownButton name="items" id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="items" id="dropdown-basic-button" title={this.state.DropdownButtonOPRTitle}>
                             <Dropdown.Item  onClick={this.handleSelectUsForOpenPr(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item  onClick={this.handleSelectTaskForOpenPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
@@ -331,7 +337,7 @@ export class IncorporationForm extends React.Component {
                     <div className="shareholder">
                         <p>Move the </p>
                         <div className="uslabel"></div>
-                        <DropdownButton name="items" id="dropdown-basic-button" title="Item">
+                        <DropdownButton name="items" id="dropdown-basic-button" title={this.state.DropdownButtonCommitsTitle}>
                             <Dropdown.Item onClick={this.handleSelectUsForCommits(idx)} href="#/action-1">US/DE</Dropdown.Item>
                             <Dropdown.Item onClick={this.handleSelectTaskForCommits(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
