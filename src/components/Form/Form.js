@@ -263,13 +263,6 @@ export class IncorporationForm extends React.Component {
                             <Par2 onChange={this.handleStatusChange} />
                         )}
 
-                        <button
-                            type="button"
-                            onClick={this.handleRemoveShareholder(0)}
-                            className="small"
-                        >
-                            -
-                        </button>
                     </div>
                  ))}
                             <br/>
@@ -301,13 +294,6 @@ export class IncorporationForm extends React.Component {
                             <Par2 onChange={this.handleStatusChange}/>
                         )}
 
-                        <button
-                            type="button"
-                            onClick={this.handleRemoveShareholder(0)}
-                            className="small"
-                        >
-                            -
-                        </button>
                     </div>
                 ))}
                 <br/>
@@ -332,15 +318,6 @@ export class IncorporationForm extends React.Component {
                             <Par2 onChange={this.handleStatusChange} />
                         )}
 
-
-
-                        <button
-                            type="button"
-                            onClick={this.handleRemoveShareholder(0)}
-                            className="small"
-                        >
-                            -
-                        </button>
                     </div>
                 ))}
                 <br/>
@@ -365,13 +342,6 @@ export class IncorporationForm extends React.Component {
                             <Par2 func={this.handleStatusChange} />
                         )}
 
-                        <button
-                            type="button"
-                            onClick={this.handleRemoveShareholder(0)}
-                            className="small"
-                        >
-                            -
-                        </button>
                     </div>
                 ))}
                 <br/>
@@ -395,15 +365,6 @@ export class IncorporationForm extends React.Component {
                             <Par2 func={this.handleStatusChange}/>
                         )}
 
-
-
-                        <button
-                            type="button"
-                            onClick={this.handleRemoveShareholder(0)}
-                            className="small"
-                        >
-                            -
-                        </button>
                     </div>
                 ))}
                 <div className="rows">
@@ -433,15 +394,6 @@ export class IncorporationForm extends React.Component {
                             <Par2 onChange={this.handleStatusChange} />
                         )}
 
-
-
-                        <button
-                            type="button"
-                            onClick={this.handleRemoveShareholder(0)}
-                            className="small"
-                        >
-                            -
-                        </button>
                     </div>
                 ))}
                 <button>Submit</button>
