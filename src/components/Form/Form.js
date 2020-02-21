@@ -36,6 +36,7 @@ export class IncorporationForm extends React.Component {
         super(props);
 
         this.state = {
+            additionalCode: "",
             rule: "",
             labels: "",
             items: "",
@@ -67,11 +68,12 @@ export class IncorporationForm extends React.Component {
             textedCommitsRules: [],
             textedNewIssuesRules: [],
             textedReadyRules: [],
-            shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersCommits: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersNewIssues: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }]
+            shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersCommits: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersNewIssues: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersReady: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }]
         };
 
     }
@@ -98,16 +100,16 @@ export class IncorporationForm extends React.Component {
                 },
                 "rules": {
                     "commit": [
-                        {"item": this.state.items, "action": this.state.status},
+                        {"item": this.state.shareholdersCommits.items, "action": this.state.status},
                     ],
                     "open-pull-request": [
-                        {"item": this.state.items, "action": this.state.status},
+                        {"item": this.state.shareholdersOpenPr.items, "action": this.state.status},
                     ],
                     "merged-pull-request": [
-                        {"item": this.state.items, "action": this.state.status},
+                        {"item": this.state.shareholdersMergedPr.items, "action": this.state.status},
                     ],
                     "labels": [
-                        {"labelName": this.state.status, "item": this.name, "action": this.state.status},
+                        {"labelName": this.state.shareholders.status, "item": this.name, "action": this.state.status},
                     ],
                     "ready": [
                         {
@@ -135,19 +137,11 @@ export class IncorporationForm extends React.Component {
 
     }
 
-
-    handleRemoveShareholder = idx => () => {
-        this.setState({
-            shareholders: this.state.shareholders.filter((s, sidx) => idx !== sidx)
-        });
-
-    };
-
      handleSelectUs = idx => () => {
-         this.setState({items: "US/DE"});
+         // this.setState({items: "US/DE"});
 
          this.setState({
-        shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}} })
+        shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}} })
 
          });
 
@@ -158,10 +152,10 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTask = idx => () => {
-        this.setState({items: "TA"});
+        // this.setState({items: "TA"});
 
         this.setState({
-            shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}} })
+            shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
         });
         this.setState({DropdownButtonLPRTitle: "TA"});
@@ -173,7 +167,7 @@ export class IncorporationForm extends React.Component {
     handleSelectUsForMergedPr = idx => () => {
         this.setState({items: "US/DE"});
         this.setState({
-            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
+            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}})
 
         });
         this.setState({DropdownButtonMergeTitle: "US/DE"});
@@ -182,7 +176,7 @@ export class IncorporationForm extends React.Component {
     handleSelectTaskForMergedPr = idx => () => {
         this.setState({items: "TA"});
         this.setState({
-            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
+            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
         });
         this.setState({DropdownButtonMergeTitle: "TA"});
@@ -191,7 +185,7 @@ export class IncorporationForm extends React.Component {
     handleSelectUsForOpenPr = idx => () => {
         this.setState({items: "US/DE"});
         this.setState({
-            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
+            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}})
 
         });
         this.setState({DropdownButtonOPRTitle: "US/DE"});
@@ -200,7 +194,7 @@ export class IncorporationForm extends React.Component {
     handleSelectTaskForOpenPr = idx => () => {
         this.setState({items: "TA"});
         this.setState({
-            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
+            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
         });
         this.setState({DropdownButtonOPRTitle: "TA"});
@@ -208,7 +202,7 @@ export class IncorporationForm extends React.Component {
     handleSelectUsForCommits = idx => () => {
         this.setState({items: "US/DE"});
         this.setState({
-            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
+            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}})
 
         });
         this.setState({DropdownButtonCommitsTitle: "US/DE"});
@@ -218,7 +212,7 @@ export class IncorporationForm extends React.Component {
     handleSelectTaskForCommits = idx => () => {
         this.setState({items: "TA"});
         this.setState({
-            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
+            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
         });
         this.setState({DropdownButtonCommitsTitle: "TA"});
@@ -311,6 +305,18 @@ export class IncorporationForm extends React.Component {
             textedReadyRules: this.state.textedReadyRules.concat("When the story state of US is in state '" + this.state.usId + "' and the task with name '" + this.state.taskName  + "' is in state '" + this.state.status + "' then mark it as ready.")});
         }
 
+    newLPRDiv(){
+        let table = []
+        if (this.state.textedLabelsPullRequestRules.length > 0) {
+            for (let i = 0; i < this.state.textedLabelsPullRequestRules.length; i++) {
+                var html=this.state.textedLabelsPullRequestRules[i];
+                html+="<button style={{width: 50}} onClick={this.removeLabelPullRequestRule(idx)}> - </button>";
+                table.push(<tr>{html}</tr>)
+            }
+        }
+        return table
+    }
+
     render() {
         const isClicked  = this.state.isClicked;
         console.log(this.state);
@@ -350,6 +356,11 @@ export class IncorporationForm extends React.Component {
                     </div>
                     {!isClicked && (
                         <div>
+                                            <div>
+                                                <table>
+                                                        {this.newLPRDiv()}
+                                                </table>
+                                            </div>
                 {this.state.shareholders.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>When a label </p>
@@ -483,7 +494,7 @@ export class IncorporationForm extends React.Component {
                         <h2 name="ready">Ready</h2>
                     </div>
                 </div>
-                {this.state.shareholdersCommits.map((shareholder, idx) => (
+                {this.state.shareholdersReady.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>When the story state of US is </p>
                         <TextField name="usId" onChange={this.handleStatusChange} id="standard-basic" label="US ID"
