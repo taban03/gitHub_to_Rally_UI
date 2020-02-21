@@ -22,9 +22,9 @@ const Par2 = (props) => {
     return (
         <div class="flexbox-container">
             <p id="textP" >with  </p>
-            <TextField onChange={props.func} name="taskName" id="standard-basic" label="Name" />
+            <TextField onChange={props.onChange} name="taskName" id="standard-basic" label="Name" />
             <p > to </p>
-            <TextField onChange={props.func} name="state" id="standard-basic" label="State" />
+            <TextField onChange={props.onChange} name="state" id="standard-basic" label="State" />
         </div>
     )
 }
@@ -49,12 +49,12 @@ export class IncorporationForm extends React.Component {
             name: "",
             message: [],
             isClicked: false,
-            shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
-            shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
-            shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
-            shareholdersCommits: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
-            shareholdersNewIssues: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
-            shareholdersReady: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }]
+            shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "" }],
+            shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "" }],
+            shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "" }],
+            shareholdersCommits: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "" }],
+            shareholdersNewIssues: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "" }],
+            shareholdersReady: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "" }]
         };
 
     }
@@ -81,21 +81,21 @@ export class IncorporationForm extends React.Component {
                 },
                 "rules": {
                     "commit": [
-                        {"item": this.state.shareholdersCommits.items, "action": this.state.status},
+                        {"item": this.state.shareholdersCommits.items, "action": this.state.shareholdersCommits.status},
                     ],
                     "open-pull-request": [
-                        {"item": this.state.shareholdersOpenPr.items, "action": this.state.status},
+                        {"item": this.state.shareholdersOpenPr.items, "action": this.state.shareholdersOpenPr.status},
                     ],
                     "merged-pull-request": [
-                        {"item": this.state.shareholdersMergedPr.items, "action": this.state.status},
+                        {"item": this.state.shareholdersMergedPr.items, "action": this.state.shareholdersMergedPr.status},
                     ],
                     "labels": [
-                        {"labelName": this.state.shareholders.status, "item": this.name, "action": this.state.status},
+                        {"labelName": this.state.shareholders.status, "item": this.this.state.shareholders.items, "action": this.state.shareholders.status},
                     ],
                     "ready": [
                         {
                             "story-state": this.state.status, "conditions": [
-                                {"item": this.state.name, "state": this.state.status}
+                                {"item": this.state.shareholdersReady.items, "state": this.state.shareholdersReady.status}
                             ]
                         }],
                     "new-issue": []
@@ -111,11 +111,57 @@ export class IncorporationForm extends React.Component {
 
     handleStatusChange = (event) => {
         let name = event.target.name;
-        if (name === "state")
-            name = "status";
         console.log(name)
         this.setState({[name]: event.target.value});
 
+    }
+
+    handleStatusChangeLabels = (idx, event) => {
+        let name = event.target.name;
+        console.log(name)
+
+        if (name === "state")
+            name = "status";
+        console.log(name)
+        this.setState({
+            shareholders: update(this.state.shareholders, {[idx]: {[name]: {$set: event.target.value} } })
+        });
+    }
+
+    handleStatusChangeOpenPr = (idx, event) => {
+        let name = event.target.name;
+        if (name === "state")
+            name = "status";
+        this.setState({
+            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {[name]: {$set: event.target.value} } })
+        });
+    }
+
+    handleStatusChangeMergedPr = (idx, event) => {
+        let name = event.target.name;
+        if (name === "state")
+            name = "status";
+        this.setState({
+            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {[name]: {$set: event.target.value} } })
+        });
+    }
+
+    handleStatusChangeCommits = (idx, event) => {
+        let name = event.target.name;
+        if (name === "state")
+            name = "status";
+        this.setState({
+            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {[name]: {$set: event.target.value} } })
+        });
+    }
+
+    handleStatusChangeReady = (idx, event) => {
+        let name = event.target.name;
+        if (name === "state")
+            name = "status";
+        this.setState({
+            shareholdersReady: update(this.state.shareholdersReady, {[idx]: {[name]: {$set: event.target.value} } })
+        });
     }
 
      handleSelectUs = idx => () => {
@@ -188,6 +234,14 @@ export class IncorporationForm extends React.Component {
         });
 
     }
+
+    handleSelectItemsforReady = (idx, event) => {
+        this.setState({
+            shareholdersReady: update(this.state.shareholdersReady, {[idx]: {items: {$set: event.target.value}}})
+        });
+
+    }
+
     onSelectChange = event => {
         console.log("onSelectChange");
     };
@@ -243,10 +297,10 @@ export class IncorporationForm extends React.Component {
                             <Dropdown.Item name="items" onClick={this.handleSelectTask(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
-                            <Par1 onChange={this.handleStatusChange} />
+                            <Par1 onChange={(event) => this.handleStatusChangeLabels(idx, event)} />
                         )}
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 &&(
-                            <Par2 onChange={this.handleStatusChange} />
+                            <Par2 onChange={(event) => this.handleStatusChangeLabels(idx, event)} />
                         )}
 
                     </div>
@@ -274,10 +328,10 @@ export class IncorporationForm extends React.Component {
                             <Dropdown.Item  onClick={this.handleSelectTaskForMergedPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
-                            <Par1 onChange={this.handleStatusChange}/>
+                            <Par1 onChange={(event) => this.handleStatusChangeMergedPr(idx, event)}/>
                         )}
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
-                            <Par2 onChange={this.handleStatusChange}/>
+                            <Par2 onChange={(event) => this.handleStatusChangeMergedPr(idx, event)}/>
                         )}
 
                     </div>
@@ -298,10 +352,10 @@ export class IncorporationForm extends React.Component {
                             <Dropdown.Item  onClick={this.handleSelectTaskForOpenPr(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
-                            <Par1 onChange={this.handleStatusChange}/>
+                            <Par1 onChange={(event) => this.handleStatusChangeOpenPr(idx, event)}/>
                         )}
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
-                            <Par2 onChange={this.handleStatusChange} />
+                            <Par2 onChange={(event) => this.handleStatusChangeOpenPr(idx, event)} />
                         )}
 
                     </div>
@@ -322,10 +376,10 @@ export class IncorporationForm extends React.Component {
                             <Dropdown.Item onClick={this.handleSelectTaskForCommits(idx)} href="#/action-2">TA</Dropdown.Item>
                         </DropdownButton>
                         {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
-                            <Par1 func={this.handleStatusChange} />
+                            <Par1 onChange={(event) => this.handleStatusChangeCommits(idx, event)} />
                         )}
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
-                            <Par2 func={this.handleStatusChange} />
+                            <Par2 onChange={(event) => this.handleStatusChangeCommits(idx, event)} />
                         )}
 
                     </div>
@@ -365,20 +419,14 @@ export class IncorporationForm extends React.Component {
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> and the task with name </p>
-                        <TextField name="taskName" onChange={this.handleStatusChange} id="standard-basic" label="Task name "
+                        <TextField name="taskName" onChange={(event) => this.handleSelectItemsforReady(idx, event)} id="standard-basic" label="Task name "
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> is in state </p>
-                        <TextField name="state"  onChange={this.handleStatusChange} id="standard-basic" label="Task state "
+                        <TextField name="state"  onChange={(event) => this.handleStatusChangeReady(idx, event)} id="standard-basic" label="Task state "
                             // onChange={this.handleShareholderNameChange(idx)}
                         />
                         <p> then mark it as ready. </p>
-                        {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
-                            <Par1 onChange={this.handleStatusChange} />
-                        )}
-                        {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
-                            <Par2 onChange={this.handleStatusChange} />
-                        )}
 
                     </div>
                 ))}
