@@ -7,6 +7,7 @@ import update from 'react-addons-update';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
+import {Button} from 'react-bootstrap';
 
 const Par1 = (props) => {
     console.log(props.onChange)
@@ -54,6 +55,8 @@ export class IncorporationForm extends React.Component {
             DropdownButtonMergeTitle: "Item",
             DropdownButtonOPRTitle: "Item",
             DropdownButtonCommitsTitle: "Item",
+            rulesLabelsPullRequest: [],
+            textedLabelsPullRequestRules: [],
             shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
             shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
             shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
@@ -117,6 +120,8 @@ export class IncorporationForm extends React.Component {
         let name = event.target.name;
         if (name === "state")
             name = "status";
+        if (name === "name")
+            name = "taskName";
         console.log(name)
         this.setState({[name]: event.target.value});
 
@@ -152,6 +157,8 @@ export class IncorporationForm extends React.Component {
 
         });
         this.setState({DropdownButtonLPRTitle: "TA"});
+         console.log(this.state.shareholders[idx].isSelectedPar1);
+         console.log(this.state.shareholders[idx].isSelectedPar2);
 
     }
 
@@ -212,9 +219,32 @@ export class IncorporationForm extends React.Component {
         console.log("onSelectChange");
     };
 
+    addNewLabelPullRequestRull = idx => () => {
+    if (this.state.DropdownButtonLPRTitle === "US/DE") {
+        this.setState({
+        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({item: "US/DE", action: this.state.status})});
+
+        this.setState({
+        textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.concat("When a label '" + this.state.labels + "' exists in a pull request, then move the US/DE to '" + this.state.status + "'")});
+        }
+    else if (this.state.DropdownButtonLPRTitle === "TA"){
+        var itemName = "TA-" + this.state.taskName;
+        itemName.concat(this.state.taskName);
+        console.log(itemName);
+        console.log(this.state.taskName);
+        this.setState({
+        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({item: itemName, action: this.state.status})});
+
+        this.setState({
+        textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.concat("When a label '" + this.state.labels + "' exists in a pull request, then move the TA with '" + this.state.taskName + "' to '" + this.state.status + "'")});
+    }
+    }
+
+
     render() {
         const isClicked  = this.state.isClicked;
-        console.log(this.state)
+        console.log(this.state);
+        console.log(this.state.rulesLabelsPullRequest);
 
         return (
             <form onSubmit={this.submitForm}>
@@ -268,7 +298,8 @@ export class IncorporationForm extends React.Component {
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 &&(
                             <Par2 onChange={this.handleStatusChange} />
                         )}
-
+                        <p>&nbsp;&nbsp;</p>
+                        <Button style={{width: 50}} onClick={this.addNewLabelPullRequestRull(idx)}> + </Button>
                     </div>
                  ))}
                             <br/>
@@ -299,7 +330,6 @@ export class IncorporationForm extends React.Component {
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
                             <Par2 onChange={this.handleStatusChange}/>
                         )}
-
                     </div>
                 ))}
                 <br/>
