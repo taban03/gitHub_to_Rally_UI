@@ -56,7 +56,17 @@ export class IncorporationForm extends React.Component {
             DropdownButtonOPRTitle: "Item",
             DropdownButtonCommitsTitle: "Item",
             rulesLabelsPullRequest: [],
+            rulesMergedPullRequest: [],
+            rulesOpenPullRequest: [],
+            rulesCommits: [],
+            rulesNewIssues: [],
+            rulesReady: [],
             textedLabelsPullRequestRules: [],
+            textedMergedPullRequestRules: [],
+            textedOpenPullRequestRules: [],
+            textedCommitsRules: [],
+            textedNewIssuesRules: [],
+            textedReadyRules: [],
             shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
             shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
             shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
@@ -120,8 +130,6 @@ export class IncorporationForm extends React.Component {
         let name = event.target.name;
         if (name === "state")
             name = "status";
-        if (name === "name")
-            name = "taskName";
         console.log(name)
         this.setState({[name]: event.target.value});
 
@@ -219,27 +227,89 @@ export class IncorporationForm extends React.Component {
         console.log("onSelectChange");
     };
 
-    addNewLabelPullRequestRull = idx => () => {
+    addNewLabelPullRequestRule = idx => () => {
     if (this.state.DropdownButtonLPRTitle === "US/DE") {
         this.setState({
-        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({item: "US/DE", action: this.state.status})});
+        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({labelName: this.state.labels, item: "US/DE", action: this.state.status})});
 
         this.setState({
         textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.concat("When a label '" + this.state.labels + "' exists in a pull request, then move the US/DE to '" + this.state.status + "'")});
         }
     else if (this.state.DropdownButtonLPRTitle === "TA"){
-        var itemName = "TA-" + this.state.taskName;
-        itemName.concat(this.state.taskName);
-        console.log(itemName);
-        console.log(this.state.taskName);
         this.setState({
-        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({item: itemName, action: this.state.status})});
+        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({labelName: this.state.labels, item: "TA-" + this.state.taskName, action: this.state.status})});
 
         this.setState({
         textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.concat("When a label '" + this.state.labels + "' exists in a pull request, then move the TA with '" + this.state.taskName + "' to '" + this.state.status + "'")});
     }
     }
 
+    addNewMergedPullRequestRule = idx => () => {
+        if (this.state.DropdownButtonMergeTitle === "US/DE") {
+            this.setState({
+            rulesMergedPullRequest: this.state.rulesMergedPullRequest.concat({item: "US/DE", action: this.state.status})});
+
+            this.setState({
+            textedMergedPullRequestRules: this.state.textedMergedPullRequestRules.concat("When a pull request is merged, move the US/DE to '" + this.state.status + "'")});
+            }
+        else if (this.state.DropdownButtonMergeTitle === "TA"){
+            this.setState({
+            rulesMergedPullRequest: this.state.rulesMergedPullRequest.concat({item: "TA-" + this.state.taskName, action: this.state.status})});
+
+            this.setState({
+            textedMergedPullRequestRules: this.state.textedMergedPullRequestRules.concat("When a pull request is merged, move the TA with '" + this.state.taskName + "' to '" + this.state.status + "'")});
+        }
+        }
+
+    addNewOpenPullRequestRule = idx => () => {
+        if (this.state.DropdownButtonOPRTitle === "US/DE") {
+            this.setState({
+            rulesOpenPullRequest: this.state.rulesOpenPullRequest.concat({item: "US/DE", action: this.state.status})});
+
+            this.setState({
+            textedOpenPullRequestRules: this.state.textedOpenPullRequestRules.concat("When a pull request is opened, move the US/DE to '" + this.state.status + "'")});
+            }
+        else if (this.state.DropdownButtonOPRTitle === "TA"){
+            this.setState({
+            rulesOpenPullRequest: this.state.rulesOpenPullRequest.concat({item: "TA-" + this.state.taskName, action: this.state.status})});
+
+            this.setState({
+            textedOpenPullRequestRules: this.state.textedOpenPullRequestRules.concat("When a pull request is opened, move the TA with '" + this.state.taskName + "' to '" + this.state.status + "'")});
+        }
+        }
+
+    addNewCommitsRule = idx => () => {
+        if (this.state.DropdownButtonCommitsTitle === "US/DE") {
+            this.setState({
+            rulesCommits: this.state.rulesCommits.concat({label: this.state.defect})});
+
+            this.setState({
+            textedCommitsRules: this.state.textedCommitsRules.concat("When a commit is happening, move the US/DE to '" + this.state.defect + "'")});
+        }
+        else if (this.state.DropdownButtonCommitsTitle === "TA"){
+            this.setState({
+            rulesCommits: this.state.rulesCommits.concat({item: "TA-" + this.state.taskName, action: this.state.status})});
+
+            this.setState({
+            textedCommitsRules: this.state.textedCommitsRules.concat("When a commit is happening, move the TA with '" + this.state.taskName + "' to '" + this.state.status + "'")});
+        }
+        }
+
+    addNewIssueRule = idx => () => {
+            this.setState({
+            rulesNewIssues: this.state.rulesNewIssues.concat({story_status: this.state.usId, item: this.state.taskName, state: this.state.status})});
+
+            this.setState({
+            textedNewIssuesRules: this.state.textedNewIssuesRules.concat("Create a new defect, only if the issue contains this label '" + this.state.defect + "'")});
+        }
+
+    addNewReadyRule = idx => () => {
+            this.setState({
+            rulesReady: this.state.rulesReady.concat({story_status: this.state.usId, item: this.state.taskName, state: this.state.status})});
+
+            this.setState({
+            textedReadyRules: this.state.textedReadyRules.concat("When the story state of US is in state '" + this.state.usId + "' and the task with name '" + this.state.taskName  + "' is in state '" + this.state.status + "' then mark it as ready.")});
+        }
 
     render() {
         const isClicked  = this.state.isClicked;
@@ -299,7 +369,7 @@ export class IncorporationForm extends React.Component {
                             <Par2 onChange={this.handleStatusChange} />
                         )}
                         <p>&nbsp;&nbsp;</p>
-                        <Button style={{width: 50}} onClick={this.addNewLabelPullRequestRull(idx)}> + </Button>
+                        <Button style={{width: 50}} onClick={this.addNewLabelPullRequestRule(idx)}> + </Button>
                     </div>
                  ))}
                             <br/>
@@ -330,6 +400,8 @@ export class IncorporationForm extends React.Component {
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
                             <Par2 onChange={this.handleStatusChange}/>
                         )}
+                        <p>&nbsp;&nbsp;</p>
+                        <Button style={{width: 50}} onClick={this.addNewMergedPullRequestRule(idx)}> + </Button>
                     </div>
                 ))}
                 <br/>
@@ -353,7 +425,8 @@ export class IncorporationForm extends React.Component {
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
                             <Par2 onChange={this.handleStatusChange} />
                         )}
-
+                        <p>&nbsp;&nbsp;</p>
+                        <Button style={{width: 50}} onClick={this.addNewOpenPullRequestRule(idx)}> + </Button>
                     </div>
                 ))}
                 <br/>
@@ -377,7 +450,8 @@ export class IncorporationForm extends React.Component {
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
                             <Par2 func={this.handleStatusChange} />
                         )}
-
+                        <p>&nbsp;&nbsp;</p>
+                        <Button style={{width: 50}} onClick={this.addNewCommitsRule(idx)}> + </Button>
                     </div>
                 ))}
                 <br/>
@@ -400,7 +474,8 @@ export class IncorporationForm extends React.Component {
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
                             <Par2 func={this.handleStatusChange}/>
                         )}
-
+                        <p>&nbsp;&nbsp;</p>
+                        <Button style={{width: 50}} onClick={this.addNewIssueRule(idx)}> + </Button>
                     </div>
                 ))}
                 <div className="rows">
@@ -429,7 +504,8 @@ export class IncorporationForm extends React.Component {
                         {shareholder.isSelectedPar2 && !shareholder.isSelectedPar1 && (
                             <Par2 onChange={this.handleStatusChange} />
                         )}
-
+                        <p>&nbsp;&nbsp;</p>
+                        <Button style={{width: 50}} onClick={this.addNewReadyRule(idx)}> + </Button>
                     </div>
                 ))}
                 <button>Submit</button>
