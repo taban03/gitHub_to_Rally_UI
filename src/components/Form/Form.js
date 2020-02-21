@@ -165,7 +165,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectUsForMergedPr = idx => () => {
-        this.setState({items: "US/DE"});
+//        this.setState({items: "US/DE"});
         this.setState({
             shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}})
 
@@ -174,7 +174,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTaskForMergedPr = idx => () => {
-        this.setState({items: "TA"});
+//        this.setState({items: "TA"});
         this.setState({
             shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
@@ -183,7 +183,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectUsForOpenPr = idx => () => {
-        this.setState({items: "US/DE"});
+//        this.setState({items: "US/DE"});
         this.setState({
             shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}})
 
@@ -192,7 +192,7 @@ export class IncorporationForm extends React.Component {
      }
 
     handleSelectTaskForOpenPr = idx => () => {
-        this.setState({items: "TA"});
+//        this.setState({items: "TA"});
         this.setState({
             shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
@@ -200,7 +200,7 @@ export class IncorporationForm extends React.Component {
         this.setState({DropdownButtonOPRTitle: "TA"});
     }
     handleSelectUsForCommits = idx => () => {
-        this.setState({items: "US/DE"});
+//        this.setState({items: "US/DE"});
         this.setState({
             shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}})
 
@@ -210,7 +210,7 @@ export class IncorporationForm extends React.Component {
 
 
     handleSelectTaskForCommits = idx => () => {
-        this.setState({items: "TA"});
+//        this.setState({items: "TA"});
         this.setState({
             shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
@@ -305,17 +305,75 @@ export class IncorporationForm extends React.Component {
             textedReadyRules: this.state.textedReadyRules.concat("When the story state of US is in state '" + this.state.usId + "' and the task with name '" + this.state.taskName  + "' is in state '" + this.state.status + "' then mark it as ready.")});
         }
 
-    newLPRDiv(){
+    newLPRTable(idx) {
         let table = []
         if (this.state.textedLabelsPullRequestRules.length > 0) {
             for (let i = 0; i < this.state.textedLabelsPullRequestRules.length; i++) {
                 var html=this.state.textedLabelsPullRequestRules[i];
-                html+="<button style={{width: 50}} onClick={this.removeLabelPullRequestRule(idx)}> - </button>";
-                table.push(<tr>{html}</tr>)
+                table.push(<tr>{html}</tr>);
             }
         }
-        return table
+        console.log(table);
+        return table;
     }
+
+    newMPRTable(idx) {
+        let table = []
+        if (this.state.textedMergedPullRequestRules.length > 0) {
+            for (let i = 0; i < this.state.textedMergedPullRequestRules.length; i++) {
+                var html=this.state.textedMergedPullRequestRules[i];
+                table.push(<tr>{html}</tr>);
+            }
+        }
+        console.log(table);
+        return table;
+    }
+    newOPRTable(idx) {
+        let table = []
+        if (this.state.textedOpenPullRequestRules.length > 0) {
+            for (let i = 0; i < this.state.textedOpenPullRequestRules.length; i++) {
+                var html=this.state.textedOpenPullRequestRules[i];
+                table.push(<tr>{html}</tr>);
+            }
+        }
+        console.log(table);
+        return table;
+    }
+    newCommitsTable(idx) {
+        let table = []
+        if (this.state.textedCommitsRules.length > 0) {
+            for (let i = 0; i < this.state.textedCommitsRules.length; i++) {
+                var html=this.state.textedCommitsRules[i];
+                table.push(<tr>{html}</tr>);
+            }
+        }
+        console.log(table);
+        return table;
+    }
+    newIssueTable(idx) {
+        let table = []
+        if (this.state.textedNewIssuesRules.length > 0) {
+            for (let i = 0; i < this.state.textedNewIssuesRules.length; i++) {
+                var html=this.state.textedNewIssuesRules[i];
+                table.push(<tr>{html}</tr>);
+            }
+        }
+        console.log(table);
+        return table;
+    }
+    newReadyTable(idx) {
+        let table = []
+        if (this.state.textedReadyRules.length > 0) {
+            for (let i = 0; i < this.state.textedReadyRules.length; i++) {
+                var html=this.state.textedReadyRules[i];
+                table.push(<tr>{html}</tr>);
+            }
+        }
+        console.log(table);
+        return table;
+    }
+
+
 
     render() {
         const isClicked  = this.state.isClicked;
@@ -356,11 +414,11 @@ export class IncorporationForm extends React.Component {
                     </div>
                     {!isClicked && (
                         <div>
-                                            <div>
-                                                <table>
-                                                        {this.newLPRDiv()}
-                                                </table>
-                                            </div>
+                            <div>
+                                <table>
+                                        {this.newLPRTable()}
+                                </table>
+                            </div>
                 {this.state.shareholders.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>When a label </p>
@@ -397,6 +455,11 @@ export class IncorporationForm extends React.Component {
                         <h2>Merged pull requests</h2>
                     </div>
                 </div>
+                <div>
+                    <table>
+                            {this.newMPRTable()}
+                    </table>
+                </div>
                 {this.state.shareholdersMergedPr.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>Move the </p>
@@ -421,6 +484,11 @@ export class IncorporationForm extends React.Component {
                     <div className="mainLab">
                         <h2 name="openPR">Open pull requests</h2>
                     </div>
+                </div>
+                <div>
+                    <table>
+                            {this.newOPRTable()}
+                    </table>
                 </div>
                 {this.state.shareholdersOpenPr.map((shareholder, idx) => (
                     <div className="shareholder">
@@ -447,6 +515,11 @@ export class IncorporationForm extends React.Component {
                         <h2 name="commits">Commits</h2>
                     </div>
                 </div>
+                <div>
+                    <table>
+                            {this.newCommitsTable()}
+                    </table>
+                </div>
                 {this.state.shareholdersCommits.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>Move the </p>
@@ -472,6 +545,11 @@ export class IncorporationForm extends React.Component {
                         <h2 name="issues">New Issue</h2>
                     </div>
                 </div>
+                <div>
+                    <table>
+                            {this.newIssueTable()}
+                    </table>
+                </div>
                 {this.state.shareholdersNewIssues.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>Create a new defect only if the issue contains this label </p>
@@ -493,6 +571,11 @@ export class IncorporationForm extends React.Component {
                     <div className="mainLab">
                         <h2 name="ready">Ready</h2>
                     </div>
+                </div>
+                <div>
+                    <table>
+                            {this.newReadyTable()}
+                    </table>
                 </div>
                 {this.state.shareholdersReady.map((shareholder, idx) => (
                     <div className="shareholder">
