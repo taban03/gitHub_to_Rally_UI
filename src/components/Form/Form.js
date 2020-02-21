@@ -54,7 +54,8 @@ export class IncorporationForm extends React.Component {
             shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
             shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
             shareholdersCommits: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersNewIssues: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }]
+            shareholdersNewIssues: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
+            shareholdersReady: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }]
         };
 
     }
@@ -117,14 +118,6 @@ export class IncorporationForm extends React.Component {
         this.setState({[name]: event.target.value});
 
     }
-
-
-    handleRemoveShareholder = idx => () => {
-        this.setState({
-            shareholders: this.state.shareholders.filter((s, sidx) => idx !== sidx)
-        });
-
-    };
 
      handleSelectUs = idx => () => {
          this.setState({items: "US/DE"});
@@ -372,7 +365,7 @@ export class IncorporationForm extends React.Component {
                         <h2 name="ready">Ready</h2>
                     </div>
                 </div>
-                {this.state.shareholdersCommits.map((shareholder, idx) => (
+                {this.state.shareholdersReady.map((shareholder, idx) => (
                     <div className="shareholder">
                         <p>When the story state of US is </p>
                         <TextField name="usId" onChange={this.handleStatusChange} id="standard-basic" label="US ID"

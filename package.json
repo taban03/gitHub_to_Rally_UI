@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "emotion": "9.2.12",
+    "emotion-theming": "9.2.9",
+    "@emotion/core": "^10.0.27",
     "@material-ui/core": "latest",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -12,6 +15,9 @@
     "express": "latest",
     "express-validator": "^6.3.0",
     "material-ui-form": "^1.0.0-alpha.26",
+    "mineral-ui": "0.54.0",
+    "mineral-ui-icons": "0.5.0",
+    "react-emotion": "9.2.12",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-addons-update": "^15.6.2",
@@ -48,7 +54,6 @@
     ]
   },
   "devDependencies": {
-    "@material-ui/icons": "^4.5.1",
     "cors": "^2.8.5"
   }
 }
