@@ -37,7 +37,6 @@ export class IncorporationForm extends React.Component {
         this.state = {
             rule: "",
             labels: "",
-            items: "",
             status: "",
             api_key: "",
             rally_host: "",
@@ -50,12 +49,12 @@ export class IncorporationForm extends React.Component {
             name: "",
             message: [],
             isClicked: false,
-            shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersCommits: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersNewIssues: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }],
-            shareholdersReady: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, and: "text" }]
+            shareholders: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersMergedPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersOpenPr: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersCommits: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersNewIssues: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }],
+            shareholdersReady: [{ name: "", isSelectedPar1: false, isSelectedPar2: false, items: "text" }]
         };
 
     }
@@ -82,16 +81,16 @@ export class IncorporationForm extends React.Component {
                 },
                 "rules": {
                     "commit": [
-                        {"item": this.state.items, "action": this.state.status},
+                        {"item": this.state.shareholdersCommits.items, "action": this.state.status},
                     ],
                     "open-pull-request": [
-                        {"item": this.state.items, "action": this.state.status},
+                        {"item": this.state.shareholdersOpenPr.items, "action": this.state.status},
                     ],
                     "merged-pull-request": [
-                        {"item": this.state.items, "action": this.state.status},
+                        {"item": this.state.shareholdersMergedPr.items, "action": this.state.status},
                     ],
                     "labels": [
-                        {"labelName": this.state.status, "item": this.name, "action": this.state.status},
+                        {"labelName": this.state.shareholders.status, "item": this.name, "action": this.state.status},
                     ],
                     "ready": [
                         {
@@ -120,10 +119,10 @@ export class IncorporationForm extends React.Component {
     }
 
      handleSelectUs = idx => () => {
-         this.setState({items: "US/DE"});
+         // this.setState({items: "US/DE"});
 
          this.setState({
-        shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}} })
+        shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}} })
 
          });
          console.log(this.state.shareholders[idx].isSelectedPar1);
@@ -132,10 +131,10 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectTask = idx => () => {
-        this.setState({items: "TA"});
+        // this.setState({items: "TA"});
 
         this.setState({
-            shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}} })
+            shareholders: update(this.state.shareholders, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
         });
 
@@ -143,44 +142,39 @@ export class IncorporationForm extends React.Component {
     }
 
     handleSelectUsForMergedPr = idx => () => {
-        this.setState({items: "US/DE"});
         this.setState({
-            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
+            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}})
 
         });
 
     }
 
     handleSelectTaskForMergedPr = idx => () => {
-        this.setState({items: "TA"});
         this.setState({
-            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
+            shareholdersMergedPr: update(this.state.shareholdersMergedPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
         });
 
     }
 
     handleSelectUsForOpenPr = idx => () => {
-        this.setState({items: "US/DE"});
         this.setState({
-            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
+            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}})
 
         });
 
      }
 
     handleSelectTaskForOpenPr = idx => () => {
-        this.setState({items: "TA"});
         this.setState({
-            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
+            shareholdersOpenPr: update(this.state.shareholdersOpenPr, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
         });
 
     }
     handleSelectUsForCommits = idx => () => {
-        this.setState({items: "US/DE"});
         this.setState({
-            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}}})
+            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}})
 
         });
 
@@ -188,9 +182,8 @@ export class IncorporationForm extends React.Component {
 
 
     handleSelectTaskForCommits = idx => () => {
-        this.setState({items: "TA"});
         this.setState({
-            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}}})
+            shareholdersCommits: update(this.state.shareholdersCommits, {[idx]: {isSelectedPar1: {$set: false}, isSelectedPar2:  {$set: true}, items: {$set: "TA"}}})
 
         });
 
