@@ -39,16 +39,17 @@ export class IncorporationForm extends React.Component {
             additionalCode: "",
             rule: "",
             labels: "",
-            items: "",
             status: "",
-            api_key: "",
+            apiKeyGit: "",
+            apiKeyRally: "",
             rally_host: "",
             workspace: "",
             project: "",
             github_base_url: "",
             repository: "",
             usId: "",
-            taskName: "",
+            labelName: "",
+            defectTag: "",
             name: "",
             message: [],
             isClicked: false,
@@ -122,12 +123,12 @@ export class IncorporationForm extends React.Component {
             method: "POST",
             body: JSON.stringify({
                 "github": {
-                    "api_key": this.state.api_key,
+                    "api_key": this.state.apiKeyGit,
                     "github_base_url": this.state.github_base_url,
                     "repository": this.state.repository,
                 },
                 "rally": {
-                    "api_key": this.state.api_key,
+                    "api_key": this.state.apiKeyRally,
                     "rally_host": this.state.rally_host,
                     "workspace": this.state.workspace,
                     "project": this.state.project
@@ -143,7 +144,7 @@ export class IncorporationForm extends React.Component {
                         {"item": this.state.shareholdersMergedPr.items, "action": this.state.shareholdersMergedPr.status},
                     ],
                     "labels": [
-                        {"labelName": this.state.shareholders.status, "item": this.this.state.shareholders.items, "action": this.state.shareholders.status},
+                        {"labelName": this.state.labelName, "item": this.this.state.shareholders.items, "action": this.state.shareholders.status},
                     ],
                     "ready": [
                         {
@@ -167,6 +168,18 @@ export class IncorporationForm extends React.Component {
         console.log(name)
         this.setState({[name]: event.target.value});
 
+    }
+
+    handleDefectTag = (event) => {
+        let name = event.target.name;
+        console.log(name)
+        this.setState({defectTag: event.target.value});
+    }
+
+    handleLabelName = (event) => {
+        let name = event.target.name;
+        console.log(name)
+        this.setState({labelName: event.target.value});
     }
 
     handleStatusChangeLabels = (idx, event) => {
@@ -476,13 +489,13 @@ export class IncorporationForm extends React.Component {
                     <div className="initial-configuration-information">
                         <h2>Initial configuration information</h2>
                         <h4>GitHub</h4>
-                        <p>API key:  <TextField name="apiKey" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
+                        <p>API key:  <TextField name="apiKeyGit" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
                         <p>GitHub base URL:  <TextField name="github_base_url" onChange={this.handleStatusChange} id="standard-basic" label="GitHub base URL"/></p>
                         <p>Repository:  <TextField name="repository" onChange={this.handleStatusChange} id="standard-basic" label="Repository"/></p>
                         <br />
                         <br />
                         <h4>Rally</h4>
-                        <p>API key:  <TextField name="apiKey" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
+                        <p>API key:  <TextField name="apiKeyRally" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
                         <p>Rally host:  <TextField name="rally_host" onChange={this.handleStatusChange} id="standard-basic" label="Rally host"/></p>
                         <p>Workspace:  <TextField name="workspace" onChange={this.handleStatusChange} id="standard-basic" label="Workspace"/></p>
                         <p>Project:  <TextField name="project" onChange={this.handleStatusChange} id="standard-basic" label="Project"/></p>
@@ -642,7 +655,7 @@ export class IncorporationForm extends React.Component {
                     <div className="shareholder">
                         <p>Create a new defect only if the issue contains this label </p>
                         <TextField id="standard-basic" label="Defect Tag"
-                            onChange={this.handleStatusChange}
+                            onChange={this.handleDefectTag}
                         />
 
                         {shareholder.isSelectedPar1 && !shareholder.isSelectedPar2 && (
