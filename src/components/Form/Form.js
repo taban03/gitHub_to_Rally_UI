@@ -86,7 +86,33 @@ export class IncorporationForm extends React.Component {
 //            body: JSON.stringify({
 //
 //            }
-         console.log("")
+         var jsonObj = JSON.parse("{}");
+         var jsonObjGithub = JSON.parse("{}");
+         jsonObjGithub["api_key"] = this.state.apiKey;
+         jsonObjGithub["github_base_url"] = this.state.github_base_url;
+         jsonObjGithub["repository"] = this.state.repository;
+         jsonObj["github"] = jsonObjGithub;
+         var jsonObjRally = JSON.parse("{}");
+         jsonObjRally["api_key"] = this.state.api_key;
+         jsonObjRally["rally_host"] = this.state.rally_host;
+         jsonObjRally["workspace"] = this.state.workspace;
+         jsonObjRally["project"] = this.state.project;
+         jsonObj["rally"] = jsonObjRally;
+         var jsonObjRules = JSON.parse("{}");
+         var jsonObjCommits = JSON.parse("{}");
+         var jsonObjOPR = JSON.parse("{}");
+         var jsonObjMPR = JSON.parse("{}");
+         var jsonObjLPR = JSON.parse("{}");
+         var jsonObjReady = JSON.parse("{}");
+         var jsonObjNewIssues = JSON.parse("{}");
+         jsonObjRules["commit"] = jsonObjCommits;
+         jsonObjRules["open-pull-request"] = jsonObjOPR;
+         jsonObjRules["merged-pull-request"] = jsonObjMPR;
+         jsonObjRules["labels"] = jsonObjLPR;
+         jsonObjRules["ready"] = jsonObjReady;
+         jsonObjRules["new-issue"] = jsonObjNewIssues;
+         jsonObj["rules"] = jsonObjRules;
+         console.log(jsonObj);
     }
 
     submitForm = async e => {
@@ -286,85 +312,85 @@ export class IncorporationForm extends React.Component {
     addNewLabelPullRequestRule = idx => () => {
     if (this.state.DropdownButtonLPRTitle === "US/DE") {
         this.setState({
-        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({labelName: this.state.labels, item: "US/DE", action: this.state.status})});
+        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({labelName: this.state.labels, item: "US/DE", action: this.state.shareholders[0].status})});
 
         this.setState({
-        textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.concat("When a label '" + this.state.labels + "' exists in a pull request, then move the US/DE to '" + this.state.status + "'")});
+        textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.concat("When a label '" + this.state.labels + "' exists in a pull request, then move the US/DE to '" + this.state.shareholders[0].status + "'")});
         }
     else if (this.state.DropdownButtonLPRTitle === "TA"){
         this.setState({
-        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({labelName: this.state.labels, item: "TA-" + this.state.taskName, action: this.state.status})});
+        rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.concat({labelName: this.state.labels, item: "TA-" + this.state.shareholders[0].taskName, action: this.state.shareholders[0].status})});
 
         this.setState({
-        textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.concat("When a label '" + this.state.labels + "' exists in a pull request, then move the TA with '" + this.state.taskName + "' to '" + this.state.status + "'")});
+        textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.concat("When a label '" + this.state.labels + "' exists in a pull request, then move the TA with '" + this.state.shareholders[0].taskName + "' to '" + this.state.shareholders[0].status + "'")});
     }
     }
 
     addNewMergedPullRequestRule = idx => () => {
         if (this.state.DropdownButtonMergeTitle === "US/DE") {
             this.setState({
-            rulesMergedPullRequest: this.state.rulesMergedPullRequest.concat({item: "US/DE", action: this.state.status})});
+            rulesMergedPullRequest: this.state.rulesMergedPullRequest.concat({item: "US/DE", action: this.state.shareholdersMergedPr[0].status})});
 
             this.setState({
-            textedMergedPullRequestRules: this.state.textedMergedPullRequestRules.concat("When a pull request is merged, move the US/DE to '" + this.state.status + "'")});
+            textedMergedPullRequestRules: this.state.textedMergedPullRequestRules.concat("When a pull request is merged, move the US/DE to '" + this.state.shareholdersMergedPr[0].status + "'")});
             }
         else if (this.state.DropdownButtonMergeTitle === "TA"){
             this.setState({
-            rulesMergedPullRequest: this.state.rulesMergedPullRequest.concat({item: "TA-" + this.state.taskName, action: this.state.status})});
+            rulesMergedPullRequest: this.state.rulesMergedPullRequest.concat({item: "TA-" + this.state.shareholdersMergedPr[0].taskName, action: this.state.shareholdersMergedPr[0].status})});
 
             this.setState({
-            textedMergedPullRequestRules: this.state.textedMergedPullRequestRules.concat("When a pull request is merged, move the TA with '" + this.state.taskName + "' to '" + this.state.status + "'")});
+            textedMergedPullRequestRules: this.state.textedMergedPullRequestRules.concat("When a pull request is merged, move the TA with '" + this.state.shareholdersMergedPr[0].taskName + "' to '" + this.state.shareholdersMergedPr[0].status + "'")});
         }
         }
 
     addNewOpenPullRequestRule = idx => () => {
         if (this.state.DropdownButtonOPRTitle === "US/DE") {
             this.setState({
-            rulesOpenPullRequest: this.state.rulesOpenPullRequest.concat({item: "US/DE", action: this.state.status})});
+            rulesOpenPullRequest: this.state.rulesOpenPullRequest.concat({item: "US/DE", action: this.state.shareholdersOpenPr[0].status})});
 
             this.setState({
-            textedOpenPullRequestRules: this.state.textedOpenPullRequestRules.concat("When a pull request is opened, move the US/DE to '" + this.state.status + "'")});
+            textedOpenPullRequestRules: this.state.textedOpenPullRequestRules.concat("When a pull request is opened, move the US/DE to '" + this.state.shareholdersOpenPr[0].status + "'")});
             }
         else if (this.state.DropdownButtonOPRTitle === "TA"){
             this.setState({
-            rulesOpenPullRequest: this.state.rulesOpenPullRequest.concat({item: "TA-" + this.state.taskName, action: this.state.status})});
+            rulesOpenPullRequest: this.state.rulesOpenPullRequest.concat({item: "TA-" + this.state.shareholdersOpenPr[0].taskName, action: this.state.shareholdersOpenPr[0].status})});
 
             this.setState({
-            textedOpenPullRequestRules: this.state.textedOpenPullRequestRules.concat("When a pull request is opened, move the TA with '" + this.state.taskName + "' to '" + this.state.status + "'")});
+            textedOpenPullRequestRules: this.state.textedOpenPullRequestRules.concat("When a pull request is opened, move the TA with '" + this.state.shareholdersOpenPr[0].taskName + "' to '" + this.state.shareholdersOpenPr[0].status + "'")});
         }
         }
 
     addNewCommitsRule = idx => () => {
         if (this.state.DropdownButtonCommitsTitle === "US/DE") {
             this.setState({
-            rulesCommits: this.state.rulesCommits.concat({label: this.state.defect})});
+            rulesCommits: this.state.rulesCommits.concat({label: this.state.shareholdersCommits[0].defect})});
 
             this.setState({
-            textedCommitsRules: this.state.textedCommitsRules.concat("When a commit is happening, move the US/DE to '" + this.state.defect + "'")});
+            textedCommitsRules: this.state.textedCommitsRules.concat("When a commit is happening, move the US/DE to '" + this.state.shareholdersCommits[0].defect + "'")});
         }
         else if (this.state.DropdownButtonCommitsTitle === "TA"){
             this.setState({
-            rulesCommits: this.state.rulesCommits.concat({item: "TA-" + this.state.taskName, action: this.state.status})});
+            rulesCommits: this.state.rulesCommits.concat({item: "TA-" + this.state.shareholdersCommits[0].taskName, action: this.state.shareholdersCommits[0].status})});
 
             this.setState({
-            textedCommitsRules: this.state.textedCommitsRules.concat("When a commit is happening, move the TA with '" + this.state.taskName + "' to '" + this.state.status + "'")});
+            textedCommitsRules: this.state.textedCommitsRules.concat("When a commit is happening, move the TA with '" + this.state.shareholdersCommits[0].taskName + "' to '" + this.state.shareholdersCommits[0].status + "'")});
         }
         }
 
     addNewIssueRule = idx => () => {
             this.setState({
-            rulesNewIssues: this.state.rulesNewIssues.concat({story_status: this.state.usId, item: this.state.taskName, state: this.state.status})});
+            rulesNewIssues: this.state.rulesNewIssues.concat({label: this.state.shareholdersNewIssues[0].defect})});
 
             this.setState({
-            textedNewIssuesRules: this.state.textedNewIssuesRules.concat("Create a new defect, only if the issue contains this label '" + this.state.defect + "'")});
+            textedNewIssuesRules: this.state.textedNewIssuesRules.concat("Create a new defect, only if the issue contains this label '" + this.state.shareholdersNewIssues[0].defect + "'")});
         }
 
     addNewReadyRule = idx => () => {
             this.setState({
-            rulesReady: this.state.rulesReady.concat({story_status: this.state.usId, item: this.state.taskName, state: this.state.status})});
+            rulesReady: this.state.rulesReady.concat({story_status: this.state.usId, item: this.state.shareholdersReady[0].items, state: this.state.shareholdersReady[0].status})});
 
             this.setState({
-            textedReadyRules: this.state.textedReadyRules.concat("When the story state of US is in state '" + this.state.usId + "' and the task with name '" + this.state.taskName  + "' is in state '" + this.state.status + "' then mark it as ready.")});
+            textedReadyRules: this.state.textedReadyRules.concat("When the story state of US is in state '" + this.state.usId + "' and the task with name '" + this.state.shareholdersReady[0].items  + "' is in state '" + this.state.shareholdersReady[0].status + "' then mark it as ready.")});
         }
 
     newLPRTable(idx) {
