@@ -78,8 +78,16 @@ export class IncorporationForm extends React.Component {
 
     }
 
-
-
+    submitFormNew = async e => {
+    e.preventDefault();
+        // this.setState({isSubmitting: true});
+//        const res = await fetch("http://localhost:8080/submit", {
+//            method: "POST",
+//            body: JSON.stringify({
+//
+//            }
+         console.log("")
+    }
 
     submitForm = async e => {
         e.preventDefault();
@@ -381,7 +389,7 @@ export class IncorporationForm extends React.Component {
         console.log(this.state.rulesLabelsPullRequest);
 
         return (
-            <form onSubmit={this.submitForm}>
+            <form onSubmit={this.submitFormNew}>
 
                 <h1>Rules Definition Form</h1>
                 <div>
