@@ -89,31 +89,39 @@ export class IncorporationForm extends React.Component {
 //            }
          var jsonObj = JSON.parse("{}");
          var jsonObjGithub = JSON.parse("{}");
-         jsonObjGithub["api_key"] = this.state.apiKey;
+         jsonObjGithub["api_key"] = this.state.apiKeyGit;
          jsonObjGithub["github_base_url"] = this.state.github_base_url;
          jsonObjGithub["repository"] = this.state.repository;
          jsonObj["github"] = jsonObjGithub;
          var jsonObjRally = JSON.parse("{}");
-         jsonObjRally["api_key"] = this.state.api_key;
+         jsonObjRally["api_key"] = this.state.apiKeyRally;
          jsonObjRally["rally_host"] = this.state.rally_host;
          jsonObjRally["workspace"] = this.state.workspace;
          jsonObjRally["project"] = this.state.project;
          jsonObj["rally"] = jsonObjRally;
          var jsonObjRules = JSON.parse("{}");
-         var jsonObjCommits = JSON.parse("{}");
-         var jsonObjOPR = JSON.parse("{}");
-         var jsonObjMPR = JSON.parse("{}");
-         var jsonObjLPR = JSON.parse("{}");
-         var jsonObjReady = JSON.parse("{}");
-         var jsonObjNewIssues = JSON.parse("{}");
-         jsonObjRules["commit"] = jsonObjCommits;
-         jsonObjRules["open-pull-request"] = jsonObjOPR;
-         jsonObjRules["merged-pull-request"] = jsonObjMPR;
-         jsonObjRules["labels"] = jsonObjLPR;
-         jsonObjRules["ready"] = jsonObjReady;
-         jsonObjRules["new-issue"] = jsonObjNewIssues;
+//         var jsonObjReadyModified = JSON.parse("{}");
+//         jsonObjReadyModified = this.state.rulesReady
+//         var modifiedReadyRules = [];
+//         for (int i = 0; i < jsonObjReadyModified.length; i++) {
+//            if (modifiedReadyRules.length>0) {
+//                for (int j = 0; j < modifiedReadyRules; j++) {
+//                    if (modifiedReadyRules[j].getElementById("story-state") == jsonObjReadyModified.getElementById("story_status")) {
+//                    }
+//                }
+//            }
+//            else {
+//            }
+//         }
+         jsonObjRules["commit"] = this.state.rulesCommits;
+         jsonObjRules["open-pull-request"] = this.state.rulesOpenPullRequest;
+         jsonObjRules["merged-pull-request"] = this.state.rulesMergedPullRequest;
+         jsonObjRules["labels"] = this.state.rulesLabelsPullRequest;
+         jsonObjRules["ready"] = this.state.rulesReady;
+         jsonObjRules["new-issue"] = this.state.rulesNewIssues;
          jsonObj["rules"] = jsonObjRules;
-         console.log(jsonObj);
+         var jsonString = JSON.stringify(jsonObj);
+         console.log(jsonString);
     }
 
     submitForm = async e => {
@@ -167,7 +175,6 @@ export class IncorporationForm extends React.Component {
         let name = event.target.name;
         console.log(name)
         this.setState({[name]: event.target.value});
-
     }
 
     handleDefectTag = (event) => {
@@ -376,10 +383,10 @@ export class IncorporationForm extends React.Component {
     addNewCommitsRule = idx => () => {
         if (this.state.DropdownButtonCommitsTitle === "US/DE") {
             this.setState({
-            rulesCommits: this.state.rulesCommits.concat({label: this.state.shareholdersCommits[0].defect})});
+            rulesCommits: this.state.rulesCommits.concat({item: "US/DE", label: this.state.shareholdersCommits[0].status})});
 
             this.setState({
-            textedCommitsRules: this.state.textedCommitsRules.concat("When a commit is happening, move the US/DE to '" + this.state.shareholdersCommits[0].defect + "'")});
+            textedCommitsRules: this.state.textedCommitsRules.concat("When a commit is happening, move the US/DE to '" + this.state.shareholdersCommits[0].status + "'")});
         }
         else if (this.state.DropdownButtonCommitsTitle === "TA"){
             this.setState({
@@ -392,15 +399,31 @@ export class IncorporationForm extends React.Component {
 
     addNewIssueRule = idx => () => {
             this.setState({
-            rulesNewIssues: this.state.rulesNewIssues.concat({label: this.state.shareholdersNewIssues[0].defect})});
+            rulesNewIssues: this.state.rulesNewIssues.concat({label: this.state.defectTag})});
 
             this.setState({
-            textedNewIssuesRules: this.state.textedNewIssuesRules.concat("Create a new defect, only if the issue contains this label '" + this.state.shareholdersNewIssues[0].defect + "'")});
+            textedNewIssuesRules: this.state.textedNewIssuesRules.concat("Create a new defect, only if the issue contains this label '" + this.state.defectTag + "'")});
         }
 
     addNewReadyRule = idx => () => {
-            this.setState({
-            rulesReady: this.state.rulesReady.concat({story_status: this.state.usId, item: this.state.shareholdersReady[0].items, state: this.state.shareholdersReady[0].status})});
+            var conditions = {item: this.state.shareholdersReady[0].items, state: this.state.shareholdersReady[0].status};
+            if (this.state.rulesReady.length > 0) {
+                for (var i = 0; i < this.state.rulesReady.length; i++) {
+                    if (this.state.rulesReady[i]["story_state"] === this.state.usId) {
+                        var storyState = this.state.rulesReady[i]["story_state"];
+                        var currentConditions = this.state.rulesReady[i]["conditions"] + conditions;
+                        console.log("auto einai to conditions: " + currentConditions["item"]);
+// Delete it and then readd it correctly.
+//                        delete this.state.rulesReady[i];
+                        this.setState({rulesReady: this.state.rulesReady.concat({story_state: storyState, conditions: currentConditions})});
+                    }
+                }
+                this.setState({rulesReady: this.state.rulesReady.concat({story_state: this.state.usId, conditions})});
+            }
+            else {
+                this.setState({rulesReady: this.state.rulesReady.concat({story_state: this.state.usId, conditions})});
+            }
+
 
             this.setState({
             textedReadyRules: this.state.textedReadyRules.concat("When the story state of US is in state '" + this.state.usId + "' and the task with name '" + this.state.shareholdersReady[0].items  + "' is in state '" + this.state.shareholdersReady[0].status + "' then mark it as ready.")});
