@@ -63,6 +63,7 @@ export class IncorporationForm extends React.Component {
             rulesCommits: [],
             rulesNewIssues: [],
             rulesReady: [],
+            temporaryRulesReady: [],
             textedLabelsPullRequestRules: [],
             textedMergedPullRequestRules: [],
             textedOpenPullRequestRules: [],
@@ -100,19 +101,6 @@ export class IncorporationForm extends React.Component {
          jsonObjRally["project"] = this.state.project;
          jsonObj["rally"] = jsonObjRally;
          var jsonObjRules = JSON.parse("{}");
-//         var jsonObjReadyModified = JSON.parse("{}");
-//         jsonObjReadyModified = this.state.rulesReady
-//         var modifiedReadyRules = [];
-//         for (int i = 0; i < jsonObjReadyModified.length; i++) {
-//            if (modifiedReadyRules.length>0) {
-//                for (int j = 0; j < modifiedReadyRules; j++) {
-//                    if (modifiedReadyRules[j].getElementById("story-state") == jsonObjReadyModified.getElementById("story_status")) {
-//                    }
-//                }
-//            }
-//            else {
-//            }
-//         }
          jsonObjRules["commit"] = this.state.rulesCommits;
          jsonObjRules["open-pull-request"] = this.state.rulesOpenPullRequest;
          jsonObjRules["merged-pull-request"] = this.state.rulesMergedPullRequest;
@@ -405,17 +393,46 @@ export class IncorporationForm extends React.Component {
             textedNewIssuesRules: this.state.textedNewIssuesRules.concat("Create a new defect, only if the issue contains this label '" + this.state.defectTag + "'")});
         }
 
+
+        changeTheTemp() {
+            var storyState = this.state.rulesReady[0]["story_state"];
+                        // {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}}
+                        // this.setState({temporaryRulesReady: update(this.state.temporaryRulesReady, {[idx]: {item: {$set: this.state.shareholdersReady[0].items}, state: {$set: this.state.shareholdersReady[0].status}}})});
+                        // this.setState({temporaryRulesReady: update(this.state.temporaryRulesReady, this.state.rulesReady[i]["conditions"])});
+                        var currentItem = this.state.shareholdersReady[0].items;
+                        var currentState = this.state.shareholdersReady[0].status;
+                        // this.setState({
+                        //     temporaryRulesReady: update(this.state.temporaryRulesReady, {[idx]: {item: {$set: "currentItem"}, state: {$set: "currentState"}}})
+                
+                        // });
+                        this.setState({temporaryRulesReady: this.state.temporaryRulesReady.concat({item: "currentItem", state: "currentState"})});
+                        this.setState({rulesReady: this.state.rulesReady.concat({story_state: storyState, conditions: this.state.temporaryRulesReady})});
+                }
+
     addNewReadyRule = idx => () => {
             var conditions = {item: this.state.shareholdersReady[0].items, state: this.state.shareholdersReady[0].status};
             if (this.state.rulesReady.length > 0) {
                 for (var i = 0; i < this.state.rulesReady.length; i++) {
                     if (this.state.rulesReady[i]["story_state"] === this.state.usId) {
-                        var storyState = this.state.rulesReady[i]["story_state"];
-                        var currentConditions = this.state.rulesReady[i]["conditions"] + conditions;
-                        console.log("auto einai to conditions: " + currentConditions["item"]);
+                        this.changeTheTemp();
+                        // var storyState = this.state.rulesReady[i]["story_state"];
+                        // {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}}
+                        // this.setState({temporaryRulesReady: update(this.state.temporaryRulesReady, {[idx]: {item: {$set: this.state.shareholdersReady[0].items}, state: {$set: this.state.shareholdersReady[0].status}}})});
+                        // this.setState({temporaryRulesReady: update(this.state.temporaryRulesReady, this.state.rulesReady[i]["conditions"])});
+                        // var currentItem = this.state.shareholdersReady[0].items;
+                        // var currentState = this.state.shareholdersReady[0].status;
+                        // this.setState({
+                        //     temporaryRulesReady: update(this.state.temporaryRulesReady, {[idx]: {item: {$set: "currentItem"}, state: {$set: "currentState"}}})
+                
+                        // });
+                        // this.setState(console.log("Herreeeeeee"),{temporaryRulesReady: this.state.temporaryRulesReady.concat({item: "currentItem", state: "currentState"})});
+                        // this.setState({temporaryRulesReady: this.state.temporaryRulesReady.concat(conditions)});
+                        // var currentConditions = this.state.rulesReady[i]["conditions"] + conditions;
+                        // console.log("auto einai to conditions: " + currentConditions["item"]);
+                        
 // Delete it and then readd it correctly.
 //                        delete this.state.rulesReady[i];
-                        this.setState({rulesReady: this.state.rulesReady.concat({story_state: storyState, conditions: currentConditions})});
+                        // this.setState({rulesReady: this.state.rulesReady.concat({story_state: storyState, conditions: this.state.temporaryRulesReady})});
                     }
                 }
                 this.setState({rulesReady: this.state.rulesReady.concat({story_state: this.state.usId, conditions})});
