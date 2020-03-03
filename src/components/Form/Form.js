@@ -53,6 +53,7 @@ export class IncorporationForm extends React.Component {
             name: "",
             message: [],
             isClicked: false,
+            initialTimestamp: "",
             DropdownButtonLPRTitle: "Item",
             DropdownButtonMergeTitle: "Item",
             DropdownButtonOPRTitle: "Item",
@@ -63,7 +64,6 @@ export class IncorporationForm extends React.Component {
             rulesCommits: [],
             rulesNewIssues: [],
             rulesReady: [],
-            temporaryRulesReady: [{item: "", status: ""}],
             textedLabelsPullRequestRules: [],
             textedMergedPullRequestRules: [],
             textedOpenPullRequestRules: [],
@@ -82,12 +82,6 @@ export class IncorporationForm extends React.Component {
 
     submitFormNew = async e => {
     e.preventDefault();
-        // this.setState({isSubmitting: true});
-//        const res = await fetch("http://localhost:8080/submit", {
-//            method: "POST",
-//            body: JSON.stringify({
-//
-//            }
          var jsonObj = JSON.parse("{}");
          var jsonObjGithub = JSON.parse("{}");
          jsonObjGithub["api_key"] = this.state.apiKeyGit;
@@ -100,6 +94,7 @@ export class IncorporationForm extends React.Component {
          jsonObjRally["workspace"] = this.state.workspace;
          jsonObjRally["project"] = this.state.project;
          jsonObj["rally"] = jsonObjRally;
+         jsonObj["initialTimestamp"] = this.state.initialTimestamp;
          var jsonObjRules = JSON.parse("{}");
          jsonObjRules["commit"] = this.state.rulesCommits;
          jsonObjRules["open-pull-request"] = this.state.rulesOpenPullRequest;
@@ -109,60 +104,28 @@ export class IncorporationForm extends React.Component {
          jsonObjRules["new-issue"] = this.state.rulesNewIssues;
          jsonObj["rules"] = jsonObjRules;
          var jsonString = JSON.stringify(jsonObj);
-         console.log(jsonString);
-    }
 
-    submitForm = async e => {
-        e.preventDefault();
-        // this.setState({isSubmitting: true});
-        const res = await fetch("http://localhost:8080/submit", {
-            method: "POST",
-            body: JSON.stringify({
-                "github": {
-                    "api_key": this.state.apiKeyGit,
-                    "github_base_url": this.state.github_base_url,
-                    "repository": this.state.repository,
-                },
-                "rally": {
-                    "api_key": this.state.apiKeyRally,
-                    "rally_host": this.state.rally_host,
-                    "workspace": this.state.workspace,
-                    "project": this.state.project
-                },
-                "rules": {
-                    "commit": [
-                        {"item": this.state.shareholdersCommits.items, "action": this.state.shareholdersCommits.status},
-                    ],
-                    "open-pull-request": [
-                        {"item": this.state.shareholdersOpenPr.items, "action": this.state.shareholdersOpenPr.status},
-                    ],
-                    "merged-pull-request": [
-                        {"item": this.state.shareholdersMergedPr.items, "action": this.state.shareholdersMergedPr.status},
-                    ],
-                    "labels": [
-                        {"labelName": this.state.labelName, "item": this.this.state.shareholders.items, "action": this.state.shareholders.status},
-                    ],
-                    "ready": [
-                        {
-                            "story-state": this.state.status, "conditions": [
-                                {"item": this.state.shareholdersReady.items, "state": this.state.shareholdersReady.status}
-                            ]
-                        }],
-                    "new-issue": []
-                }
-                }),
-            headers: {
+         e.preventDefault();
+                 // this.setState({isSubmitting: true});
+         const res = await fetch("http://localhost:3000/submit", {
+             method: "POST",
+             body: JSON.stringify(jsonString),
+             headers: {
                 "Content-Type": "application/json"
-            }
-        });
+             }
+         });
 
-        console.log(res)
+         console.log(jsonString);
     }
 
     handleStatusChange = (event) => {
         let name = event.target.name;
         console.log(name)
         this.setState({[name]: event.target.value});
+    }
+
+    handleDate = (event) => {
+        this.setState({initialTimestamp: event.target.value});
     }
 
     handleDefectTag = (event) => {
@@ -371,7 +334,7 @@ export class IncorporationForm extends React.Component {
     addNewCommitsRule = idx => () => {
         if (this.state.DropdownButtonCommitsTitle === "US/DE") {
             this.setState({
-            rulesCommits: this.state.rulesCommits.concat({item: "US/DE", label: this.state.shareholdersCommits[0].status})});
+            rulesCommits: this.state.rulesCommits.concat({item: "US/DE", action: this.state.shareholdersCommits[0].status})});
 
             this.setState({
             textedCommitsRules: this.state.textedCommitsRules.concat("When a commit is happening, move the US/DE to '" + this.state.shareholdersCommits[0].status + "'")});
@@ -387,7 +350,7 @@ export class IncorporationForm extends React.Component {
 
     addNewIssueRule = idx => () => {
             this.setState({
-            rulesNewIssues: this.state.rulesNewIssues.concat({label: this.state.defectTag})});
+            rulesNewIssues: this.state.rulesNewIssues.concat({required_label: this.state.defectTag})});
 
             this.setState({
             textedNewIssuesRules: this.state.textedNewIssuesRules.concat("Create a new defect, only if the issue contains this label '" + this.state.defectTag + "'")});
@@ -414,7 +377,7 @@ export class IncorporationForm extends React.Component {
                         // this.setState({temporaryRulesReady: this.state.temporaryRulesReady.concat(conditions)});
                         var currentConditions = this.state.rulesReady[i]["conditions"] + conditions;
                         console.log("auto einai to conditions: " + currentConditions["item"]);
-                        
+
 // Delete it and then readd it correctly.
 //                        delete this.state.rulesReady[i];
                         this.setState({rulesReady: this.state.rulesReady.concat({story_state: storyState, conditions: this.state.temporaryRulesReady})});
@@ -529,6 +492,7 @@ export class IncorporationForm extends React.Component {
                         <h4>Initial Timestamp</h4>
                         <Form.Control
                         type="date"
+                        onChange={this.handleDate}
                         />
                     </div>
                     <br />
