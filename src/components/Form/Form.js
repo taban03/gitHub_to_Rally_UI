@@ -358,37 +358,8 @@ export class IncorporationForm extends React.Component {
 
 
     addNewReadyRule = idx => () => {
-            var conditions = {item: this.state.shareholdersReady[0].items, state: this.state.shareholdersReady[0].status};
-            if (this.state.rulesReady.length > 0) {
-                for (var i = 0; i < this.state.rulesReady.length; i++) {
-                    if (this.state.rulesReady[i]["story_state"] === this.state.usId) {
-                        // this.changeTheTemp(idx);
-                        var storyState = this.state.rulesReady[i]["story_state"];
-                        // {[idx]: {isSelectedPar1: {$set: true}, isSelectedPar2:  {$set: false}, items: {$set: "US/DE"}}}
-                        // this.setState({temporaryRulesReady: update(this.state.temporaryRulesReady, {[idx]: {item: {$set: this.state.shareholdersReady[0].items}, state: {$set: this.state.shareholdersReady[0].status}}})});
-                        // this.setState({temporaryRulesReady: update(this.state.temporaryRulesReady, this.state.rulesReady[i]["conditions"])});
-                        var currentItem = this.state.shareholdersReady[0].items;
-                        var currentState = this.state.shareholdersReady[0].status;
-                        this.setState({
-                            temporaryRulesReady: update(this.state.temporaryRulesReady, {[idx]: {item: {$set: currentItem}, state: {$set: currentState}}})
-
-                        });
-                        // this.setState(console.log("Herreeeeeee"),{temporaryRulesReady: this.state.temporaryRulesReady.concat({item: "currentItem", state: "currentState"})});
-                        // this.setState({temporaryRulesReady: this.state.temporaryRulesReady.concat(conditions)});
-                        var currentConditions = this.state.rulesReady[i]["conditions"] + conditions;
-                        console.log("auto einai to conditions: " + currentConditions["item"]);
-
-// Delete it and then readd it correctly.
-//                        delete this.state.rulesReady[i];
-                        this.setState({rulesReady: this.state.rulesReady.concat({story_state: storyState, conditions: this.state.temporaryRulesReady})});
-                    }
-                }
-                this.setState({rulesReady: this.state.rulesReady.concat({story_state: this.state.usId, conditions})});
-            }
-            else {
-                this.setState({rulesReady: this.state.rulesReady.concat({story_state: this.state.usId, conditions})});
-            }
-
+            this.setState({
+            rulesReady: this.state.rulesReady.concat({story_state: this.state.usId, item: this.state.shareholdersReady[0].items, state: this.state.shareholdersReady[0].status})});
 
             this.setState({
             textedReadyRules: this.state.textedReadyRules.concat("When the story state of US is in state '" + this.state.usId + "' and the task with name '" + this.state.shareholdersReady[0].items  + "' is in state '" + this.state.shareholdersReady[0].status + "' then mark it as ready.")});
@@ -493,7 +464,7 @@ export class IncorporationForm extends React.Component {
                         <Form.Control
                         type="date"
                         onChange={this.handleDate}
-                        />
+                        required/>
                     </div>
                     <br />
                     <br />
