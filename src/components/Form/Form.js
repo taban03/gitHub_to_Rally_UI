@@ -125,7 +125,8 @@ export class IncorporationForm extends React.Component {
     }
 
     handleDate = (event) => {
-        this.setState({initialTimestamp: event.target.value});
+        var modifiedDate = event.target.value + "T00:00:00Z";
+        this.setState({initialTimestamp: modifiedDate});
     }
 
     handleDefectTag = (event) => {
