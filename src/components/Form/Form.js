@@ -104,10 +104,10 @@ export class IncorporationForm extends React.Component {
          jsonObjRules["new-issue"] = this.state.rulesNewIssues;
          jsonObj["rules"] = jsonObjRules;
          var jsonString = JSON.stringify(jsonObj);
-
+         console.log(jsonString);
          e.preventDefault();
                  // this.setState({isSubmitting: true});
-         const res = await fetch("http://localhost:3000/submit", {
+         const res = await fetch("http://localhost:8080/submit", {
              method: "POST",
              body: JSON.stringify(jsonString),
              headers: {
@@ -115,7 +115,6 @@ export class IncorporationForm extends React.Component {
              }
          });
 
-         console.log(jsonString);
     }
 
     handleStatusChange = (event) => {
@@ -374,7 +373,6 @@ export class IncorporationForm extends React.Component {
                 table.push(<tr>{html}</tr>);
             }
         }
-        console.log(table);
         return table;
     }
 
@@ -386,7 +384,6 @@ export class IncorporationForm extends React.Component {
                 table.push(<tr>{html}</tr>);
             }
         }
-        console.log(table);
         return table;
     }
     newOPRTable(idx) {
@@ -397,7 +394,6 @@ export class IncorporationForm extends React.Component {
                 table.push(<tr>{html}</tr>);
             }
         }
-        console.log(table);
         return table;
     }
     newCommitsTable(idx) {
@@ -408,7 +404,6 @@ export class IncorporationForm extends React.Component {
                 table.push(<tr>{html}</tr>);
             }
         }
-        console.log(table);
         return table;
     }
     newIssueTable(idx) {
@@ -419,7 +414,6 @@ export class IncorporationForm extends React.Component {
                 table.push(<tr>{html}</tr>);
             }
         }
-        console.log(table);
         return table;
     }
     newReadyTable(idx) {
@@ -430,7 +424,6 @@ export class IncorporationForm extends React.Component {
                 table.push(<tr>{html}</tr>);
             }
         }
-        console.log(table);
         return table;
     }
 
@@ -439,7 +432,6 @@ export class IncorporationForm extends React.Component {
     render() {
         const isClicked  = this.state.isClicked;
         console.log(this.state);
-        console.log(this.state.rulesLabelsPullRequest);
 
         return (
             <form onSubmit={this.submitFormNew}>
