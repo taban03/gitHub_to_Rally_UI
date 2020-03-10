@@ -103,13 +103,11 @@ export class IncorporationForm extends React.Component {
          jsonObjRules["ready"] = this.state.rulesReady;
          jsonObjRules["new-issue"] = this.state.rulesNewIssues;
          jsonObj["rules"] = jsonObjRules;
-         var jsonString = JSON.stringify(jsonObj);
-         console.log(jsonString);
          e.preventDefault();
                  // this.setState({isSubmitting: true});
          const res = await fetch("http://localhost:8080/submit", {
              method: "POST",
-             body: JSON.stringify(jsonString),
+             body: JSON.stringify(jsonObj),
              headers: {
                 "Content-Type": "application/json"
              }
