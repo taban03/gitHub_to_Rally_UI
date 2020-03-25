@@ -103,6 +103,7 @@ export class IncorporationForm extends React.Component {
          jsonObjRules["ready"] = this.state.rulesReady;
          jsonObjRules["new-issue"] = this.state.rulesNewIssues;
          jsonObj["rules"] = jsonObjRules;
+         console.log(JSON.stringify(jsonObj));
          e.preventDefault();
                  // this.setState({isSubmitting: true});
          const res = await fetch("http://localhost:8080/submit", {
@@ -375,6 +376,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleRemoveLPR(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedLabelsPullRequestRules[idx]))
         this.setState({
           rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.filter((s, _idx) => _idx !== idx),
           textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.filter((s, _idx) => _idx !== idx)
@@ -394,6 +396,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleRemoveMPR(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedMergedPullRequestRules[idx]))
         this.setState({
           rulesMergedPullRequest: this.state.rulesMergedPullRequest.filter((s, _idx) => _idx !== idx),
           textedMergedPullRequestRules: this.state.textedMergedPullRequestRules.filter((s, _idx) => _idx !== idx)
@@ -413,6 +416,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleRemoveOPR(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedOpenPullRequestRules[idx]))
         this.setState({
           rulesOpenPullRequest: this.state.rulesOpenPullRequest.filter((s, _idx) => _idx !== idx),
           textedOpenPullRequestRules: this.state.textedOpenPullRequestRules.filter((s, _idx) => _idx !== idx)
@@ -432,6 +436,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleRemoveCommits(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedCommitsRules[idx]))
         this.setState({
           rulesCommits: this.state.rulesCommits.filter((s, _idx) => _idx !== idx),
           textedCommitsRules: this.state.textedCommitsRules.filter((s, _idx) => _idx !== idx)
@@ -451,6 +456,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleRemoveNewIssues(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedNewIssuesRules[idx]))
         this.setState({
           rulesNewIssues: this.state.rulesNewIssues.filter((s, _idx) => _idx !== idx),
           textedNewIssuesRules: this.state.textedNewIssuesRules.filter((s, _idx) => _idx !== idx)
@@ -470,6 +476,7 @@ export class IncorporationForm extends React.Component {
     }
 
     handleRemoveReady(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedReadyRules[idx]))
         this.setState({
           rulesReady: this.state.rulesReady.filter((s, _idx) => _idx !== idx),
           textedReadyRules: this.state.textedReadyRules.filter((s, _idx) => _idx !== idx)
