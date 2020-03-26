@@ -103,6 +103,7 @@ export class IncorporationForm extends React.Component {
          jsonObjRules["ready"] = this.state.rulesReady;
          jsonObjRules["new-issue"] = this.state.rulesNewIssues;
          jsonObj["rules"] = jsonObjRules;
+         console.log(JSON.stringify(jsonObj));
          e.preventDefault();
          const hostname = this.state.hostname;
                  // this.setState({isSubmitting: true});
@@ -375,10 +376,19 @@ export class IncorporationForm extends React.Component {
         if (this.state.textedLabelsPullRequestRules.length > 0) {
             for (let i = 0; i < this.state.textedLabelsPullRequestRules.length; i++) {
                 var html=this.state.textedLabelsPullRequestRules[i];
-                table.push(<tr>{html}</tr>);
+                table.push(<tr>{html}<button type="button" onClick={() => this.handleRemoveLPR(i)} className="small"> - </button></tr>);
             }
         }
         return table;
+    }
+
+    handleRemoveLPR(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedLabelsPullRequestRules[idx]))
+        this.setState({
+          rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.filter((s, _idx) => _idx !== idx),
+          textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.filter((s, _idx) => _idx !== idx)
+
+        });
     }
 
     newMPRTable(idx) {
@@ -386,53 +396,100 @@ export class IncorporationForm extends React.Component {
         if (this.state.textedMergedPullRequestRules.length > 0) {
             for (let i = 0; i < this.state.textedMergedPullRequestRules.length; i++) {
                 var html=this.state.textedMergedPullRequestRules[i];
-                table.push(<tr>{html}</tr>);
+                table.push(<tr>{html}<button type="button" onClick={() => this.handleRemoveMPR(i)} className="small"> - </button></tr>);
             }
         }
         return table;
     }
+
+    handleRemoveMPR(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedMergedPullRequestRules[idx]))
+        this.setState({
+          rulesMergedPullRequest: this.state.rulesMergedPullRequest.filter((s, _idx) => _idx !== idx),
+          textedMergedPullRequestRules: this.state.textedMergedPullRequestRules.filter((s, _idx) => _idx !== idx)
+
+        });
+    }
+
     newOPRTable(idx) {
         let table = []
         if (this.state.textedOpenPullRequestRules.length > 0) {
             for (let i = 0; i < this.state.textedOpenPullRequestRules.length; i++) {
                 var html=this.state.textedOpenPullRequestRules[i];
-                table.push(<tr>{html}</tr>);
+                table.push(<tr>{html}<button type="button" onClick={() => this.handleRemoveOPR(i)} className="small"> - </button></tr>);
             }
         }
         return table;
     }
+
+    handleRemoveOPR(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedOpenPullRequestRules[idx]))
+        this.setState({
+          rulesOpenPullRequest: this.state.rulesOpenPullRequest.filter((s, _idx) => _idx !== idx),
+          textedOpenPullRequestRules: this.state.textedOpenPullRequestRules.filter((s, _idx) => _idx !== idx)
+
+        });
+    }
+
     newCommitsTable(idx) {
         let table = []
         if (this.state.textedCommitsRules.length > 0) {
             for (let i = 0; i < this.state.textedCommitsRules.length; i++) {
                 var html=this.state.textedCommitsRules[i];
-                table.push(<tr>{html}</tr>);
+                table.push(<tr>{html}<button type="button" onClick={() => this.handleRemoveCommits(i)} className="small"> - </button></tr>);
             }
         }
         return table;
     }
+
+    handleRemoveCommits(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedCommitsRules[idx]))
+        this.setState({
+          rulesCommits: this.state.rulesCommits.filter((s, _idx) => _idx !== idx),
+          textedCommitsRules: this.state.textedCommitsRules.filter((s, _idx) => _idx !== idx)
+
+        });
+    }
+
     newIssueTable(idx) {
         let table = []
         if (this.state.textedNewIssuesRules.length > 0) {
             for (let i = 0; i < this.state.textedNewIssuesRules.length; i++) {
                 var html=this.state.textedNewIssuesRules[i];
-                table.push(<tr>{html}</tr>);
+                table.push(<tr>{html}<button type="button" onClick={() => this.handleRemoveNewIssues(i)} className="small"> - </button></tr>);
             }
         }
         return table;
     }
+
+    handleRemoveNewIssues(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedNewIssuesRules[idx]))
+        this.setState({
+          rulesNewIssues: this.state.rulesNewIssues.filter((s, _idx) => _idx !== idx),
+          textedNewIssuesRules: this.state.textedNewIssuesRules.filter((s, _idx) => _idx !== idx)
+
+        });
+    }
+
     newReadyTable(idx) {
         let table = []
         if (this.state.textedReadyRules.length > 0) {
             for (let i = 0; i < this.state.textedReadyRules.length; i++) {
                 var html=this.state.textedReadyRules[i];
-                table.push(<tr>{html}</tr>);
+                table.push(<tr>{html}<button type="button" onClick={() => this.handleRemoveReady(i)} className="small"> - </button></tr>);
             }
         }
         return table;
     }
 
+    handleRemoveReady(idx) {
+        if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedReadyRules[idx]))
+        this.setState({
+          rulesReady: this.state.rulesReady.filter((s, _idx) => _idx !== idx),
+          textedReadyRules: this.state.textedReadyRules.filter((s, _idx) => _idx !== idx)
 
+        });
+    }
 
     render() {
         const isClicked  = this.state.isClicked;
