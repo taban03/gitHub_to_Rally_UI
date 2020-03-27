@@ -8,13 +8,12 @@ In the project directory, you can run:
 ## How to run the project:
 
 1. Run `npm start`. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-2. Run `node server.js` to start the Nodejs express backend (default port `8080`)
+2. Run `node server.js` to start the Nodejs express backend (default port `8081`)
 
 ## Configuration
 
-1.  Hostname: the hostname where the web app will run on. If you're running on local environment, set it to `localhost`.
-2.  GitHub and Rally configurations, such as the API key, the GitHub base URL, the repository name, the Rally workspace etc.
-3.  Initial Timestamp: the initial time value from where you want start the scanning for the mapping.
+1.  GitHub and Rally configurations, such as the API key, the GitHub base URL, the repository name, the Rally workspace etc.
+2.  Initial Timestamp: the initial time value from where you want start the scanning for the mapping.
 
 By default, the updater will run every 5 minutes, scanning GitHub side and mapping to Rally according to the settings that you provided.
 
