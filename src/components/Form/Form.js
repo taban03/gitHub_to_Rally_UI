@@ -105,7 +105,7 @@ export class IncorporationForm extends React.Component {
          jsonObj["rules"] = jsonObjRules;
          console.log(JSON.stringify(jsonObj));
          e.preventDefault();
-         const hostname = this.state.hostname;
+         const hostname = window.location.hostname;
                  // this.setState({isSubmitting: true});
          const res = await fetch(`http://${hostname}:8081/submit`, {
              method: "POST",
@@ -115,12 +115,6 @@ export class IncorporationForm extends React.Component {
              }
          });
 
-    }
-
-    handleHostname = (event) => {
-        let name = event.target.name;
-        console.log(name)
-        this.setState({[name]: event.target.value});
     }
 
     handleStatusChange = (event) => {
@@ -502,7 +496,6 @@ export class IncorporationForm extends React.Component {
                 <div>
                     <div className="initial-configuration-information">
                         <h2>Initial configuration information</h2>
-                        <p>Hostname:  <TextField name="hostname" onChange={this.handleHostname} id="standard-basic" label="Hostname"/></p>
                         <h4>GitHub</h4>
                         <p>API key:  <TextField name="apiKeyGit" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
                         <p>GitHub base URL:  <TextField name="github_base_url" onChange={this.handleStatusChange} id="standard-basic" label="GitHub base URL"/></p>
