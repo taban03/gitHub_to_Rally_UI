@@ -1,45 +1,63 @@
 
-## GitHub to Rally Web UI
+# GitHub2Rally Web UI
 
-This Web UI provides a form which the user can fill in order to define the configuration used the GitHub to Rally integration.
+This Web UI provides a form that the user can fill in order to define the configuration used for the GitHub to Rally integration.
 
 In the project directory, you can run:
 
-### How to run the project:
+## How to run the project:
 
-1. Run `npm start`
+1. Run `npm start`. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 2. Run `node server.js` to start the Nodejs express backend (default port `8080`)
 
-### `npm start`
+## Configuration
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1.  Hostname: the hostname where the web app will run on. If you're running on local environment, set it to `localhost`.
+2.  GitHub and Rally configurations, such as the API key, the GitHub base URL, the repository name, the Rally workspace etc.
+3.  Initial Timestamp: the initial time value from where you want start the scanning for the mapping.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+By default, the updater will run every 5 minutes, scanning GitHub side and mapping to Rally according to the settings that you provided.
 
-### `npm test`
+## Rules
+The GitHub2Rally Web UI provides different rules that the user can define to customize the mapping between GitHub and Rally based on his needs.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Note:** For the GitHub2Rally integration to work, the GitHub branch must contain the id of the US/DE (`USXXXXXX` or `DEXXXXXX`) in the name (e.g. `private/US123456-fix-ui`).
 
-### `npm run build`
+1.  Labels of pull request: define the rule used to update a Rally item (US, TA, DE) state based on a label name assigned to a PR. 
+The label name should refer to the user story/defect ID (`USXXXXXX`, `DEXXXXXX`) or to a task name. 
+The Rally item will be automatically updated to the defined state.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    **Example:**
+    
+        When a label 'In progress' exists in a pull request, then move the corresponding user story to in Progress.
+        
+2.  Merged pull requests: defines the rule used to update a Rally item (US, TA, DE) state once the corresponding PR is merged.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+    **Example:**
+    
+        When a pull request is merged, move the US/DE to Complete
+        
+3.  Open pull requests: defines the rule used to update a Rally item (US, TA, DE) state once the corresponding PR is open.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    **Example:**
+    
+        When a pull request is open, move the US/DE to In progress
+        
+4.  Commits: defines the rule used to update a Rally item (US, TA, DE) state once a commit is performed on the corresponding GitHub item.
 
-### `npm run eject`
+    **Example:**
+    
+        When a commit is happening, move the US/DE to In progress
+ 
+5.  New Issue: defines the rule used to create a new defect on Rally based on the corresponding GitHub issue with a specific label.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    **Example:**
+    
+        Create a new defect, only if the issue contains this label Bug
+        
+6.  Ready: defines the rule used to mark as Ready a specific user story on Rally based on the state of a specific task.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
+    **Example:**
+    
+        When the story state of US is in state Defined and the task with name Testing is in state Defined then mark it as ready
+        
