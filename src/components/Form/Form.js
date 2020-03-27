@@ -8,6 +8,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import {Button} from 'react-bootstrap';
+import config_json from '../../conf.json'
 
 const Par1 = (props) => {
     console.log(props.onChange)
@@ -36,6 +37,7 @@ export class IncorporationForm extends React.Component {
         super(props);
 
         this.state = {
+            existing_config_json: config_json,
             additionalCode: "",
             rule: "",
             labels: "",
@@ -54,6 +56,7 @@ export class IncorporationForm extends React.Component {
             message: [],
             isClicked: false,
             initialTimestamp: "",
+            ConfigurationNameTitle: "Select existing configuration",
             DropdownButtonLPRTitle: "Item",
             DropdownButtonMergeTitle: "Item",
             DropdownButtonOPRTitle: "Item",
@@ -81,6 +84,7 @@ export class IncorporationForm extends React.Component {
     }
 
     submitFormNew = async e => {
+
     e.preventDefault();
          var jsonObj = JSON.parse("{}");
          var jsonObjGithub = JSON.parse("{}");
@@ -113,6 +117,7 @@ export class IncorporationForm extends React.Component {
                 "Content-Type": "application/json"
              }
          });
+    this.setState({ existing_config_json: update(this.state.existing_config_json, {$set: config_json}) });
 
     }
 
@@ -149,6 +154,7 @@ export class IncorporationForm extends React.Component {
         this.setState({
             shareholders: update(this.state.shareholders, {[idx]: {[name]: {$set: event.target.value} } })
         });
+
     }
 
     handleStatusChangeOpenPr = (idx, event) => {
@@ -378,6 +384,7 @@ export class IncorporationForm extends React.Component {
     handleRemoveLPR(idx) {
         if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedLabelsPullRequestRules[idx]))
         this.setState({
+
           rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.filter((s, _idx) => _idx !== idx),
           textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.filter((s, _idx) => _idx !== idx)
 
@@ -484,6 +491,20 @@ export class IncorporationForm extends React.Component {
         });
     }
 
+    initializeFormBasedOnConfiguration = (idx, configName) => () => {
+        if (idx===0){
+            console.log(this.state.existing_config_json["configurations"]);
+            this.setState({apiKeyGit: this.state.existing_config_json["configurations"][idx]["github"]["api_key"]});
+            this.setState({github_base_url: this.state.existing_config_json["configurations"][idx]["github"]["github_base_url"]});
+            this.setState({repository: this.state.existing_config_json["configurations"][idx]["github"]["repository"]});
+            this.setState({apiKeyRally: this.state.existing_config_json["configurations"][idx]["rally"]["api_key"]});
+            this.setState({rally_host: this.state.existing_config_json["configurations"][idx]["rally"]["rally_host"]});
+            this.setState({workspace: this.state.existing_config_json["configurations"][idx]["rally"]["workspace"]});
+            this.setState({project: this.state.existing_config_json["configurations"][idx]["rally"]["project"]});
+            this.setState({ConfigurationNameTitle: configName});
+        }
+    }
+
     render() {
         const isClicked  = this.state.isClicked;
         console.log(this.state);
@@ -495,6 +516,10 @@ export class IncorporationForm extends React.Component {
                 <div>
                     <div className="initial-configuration-information">
                         <h2>Initial configuration information</h2>
+                        <DropdownButton name="items" id="dropdown-basic-button" title={this.state.ConfigurationNameTitle}>
+                            <Dropdown.Item  onClick={this.initializeFormBasedOnConfiguration(0, "Demo configuration")} href="#/0">Demo configuration</Dropdown.Item>
+                            <Dropdown.Item  onClick={this.initializeFormBasedOnConfiguration(1, "New configuration")} href="#/1">New configuration</Dropdown.Item>
+                        </DropdownButton>
                         <h4>GitHub</h4>
                         <p>API key:  <TextField name="apiKeyGit" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
                         <p>GitHub base URL:  <TextField name="github_base_url" onChange={this.handleStatusChange} id="standard-basic" label="GitHub base URL"/></p>
