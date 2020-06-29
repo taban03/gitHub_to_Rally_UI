@@ -77,6 +77,81 @@
         }
       ]
     }
-  }
+  },
+    {
+      "configuration_name": "for testing 2",
+      "github": {
+        "api_key": "150ac3d9679bf78db2864c705b528366fa60f5db",
+        "github_base_url": "https://github.gwd.broadcom.net/api/",
+        "repository": "av667504/git2rallytestenvironment"
+      },
+      "rally": {
+        "api_key": "_9oUwWI7pT8CmIGntg3lt6uL5zNFU7yj4hGcxzuXEE",
+        "rally_host": "rally1.rallydev.com",
+        "workspace": "CA Test Workspace",
+        "project": "PTC Summer Project"
+      },
+      "initialTimestamp": "2020-02-01Z00:00:00T",
+      "rules": {
+        "commit": [
+          {
+            "item": "US/DE",
+            "action": "In-Progress"
+          },
+          {
+            "item": "TA-Implementation",
+            "action": "In-Progress"
+          }
+        ],
+        "open-pull-request": [
+          {
+            "item": "TA-Implementation",
+            "action": "Completed"
+          }
+        ],
+        "merged-pull-request": [
+          {
+            "item": "US/DE",
+            "action": "Completed"
+          }
+        ],
+        "labels": [
+          {
+            "labelName": "status/code-review",
+            "item": "TA-Review",
+            "action": "In-Progress"
+          },
+          {
+            "labelName": "status/testing",
+            "item": "TA-Testing",
+            "action": "In-Progress"
+          }
+        ],
+        "ready": [
+          {
+            "story_state": "In-Progress",
+            "item": "TA-Implementation",
+            "state": "In-Progress"
+          },
+          {
+            "story_state": "Review",
+            "item": "TA-Implementation",
+            "state": "Completed"
+          },
+          {
+            "story_state": "Review",
+            "item": "TA-Testing",
+            "state": "Completed"
+          },
+          {
+            "story_state": "Review",
+            "item": "TA-Review",
+            "state": "Completed"
+          }
+        ],
+        "new-issue": [
+        ]
+      }
+    }
   ]
 }
