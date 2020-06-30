@@ -13,7 +13,7 @@
       "workspace": "CA Test Workspace",
       "project": "PTC Summer Project"
     },
-    "initialTimestamp": "2020-02-01Z00:00:00T",
+    "initialTimestamp": "2020-02-01T00:00:00Z",
     "rules": {
       "commit": [
         {
@@ -91,7 +91,7 @@
         "workspace": "CA Test Workspace",
         "project": "PTC Summer Project"
       },
-      "initialTimestamp": "2020-02-01Z00:00:00T",
+      "initialTimestamp": "2020-02-01T00:00:00Z",
       "rules": {
         "commit": [
           {

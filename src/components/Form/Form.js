@@ -87,19 +87,24 @@ export class IncorporationForm extends React.Component {
     submitFormNew = async e => {
 
     e.preventDefault();
-         var jsonObj = JSON.parse("{}");
+         var jsonObjConfiguration = JSON.parse("{}");
+         if (this.state.ConfigurationNameTitle === "New configuration"){
+                jsonObjConfiguration["configuration_name"] = this.state.NewConfigurationName;
+         } else {
+                jsonObjConfiguration["configuration_name"] = this.state.ConfigurationNameTitle;
+         }
          var jsonObjGithub = JSON.parse("{}");
          jsonObjGithub["api_key"] = this.state.apiKeyGit;
          jsonObjGithub["github_base_url"] = this.state.github_base_url;
          jsonObjGithub["repository"] = this.state.repository;
-         jsonObj["github"] = jsonObjGithub;
+         jsonObjConfiguration["github"] = jsonObjGithub;
          var jsonObjRally = JSON.parse("{}");
          jsonObjRally["api_key"] = this.state.apiKeyRally;
          jsonObjRally["rally_host"] = this.state.rally_host;
          jsonObjRally["workspace"] = this.state.workspace;
          jsonObjRally["project"] = this.state.project;
-         jsonObj["rally"] = jsonObjRally;
-         jsonObj["initialTimestamp"] = this.state.initialTimestamp;
+         jsonObjConfiguration["rally"] = jsonObjRally;
+         jsonObjConfiguration["initialTimestamp"] = this.state.initialTimestamp;
          var jsonObjRules = JSON.parse("{}");
          jsonObjRules["commit"] = this.state.rulesCommits;
          jsonObjRules["open-pull-request"] = this.state.rulesOpenPullRequest;
@@ -107,8 +112,27 @@ export class IncorporationForm extends React.Component {
          jsonObjRules["labels"] = this.state.rulesLabelsPullRequest;
          jsonObjRules["ready"] = this.state.rulesReady;
          jsonObjRules["new-issue"] = this.state.rulesNewIssues;
-         jsonObj["rules"] = jsonObjRules;
+         jsonObjConfiguration["rules"] = jsonObjRules;
+         console.log(JSON.stringify(jsonObjConfiguration));
+
+         //make it either replace or add a new configuration
+         var jsonObj = JSON.parse("{}");
+         jsonObj["configurations"] = this.state.existing_config_json["configurations"];
+         if (this.state.ConfigurationNameTitle === "New configuration"){
+                jsonObj["configurations"].push(jsonObjConfiguration);
+         } else {
+                // change an existing configuration
+                for (var i = 0 ; i < this.state.existing_config_json["configurations"].length; i++) {
+                    if (this.state.existing_config_json["configurations"][i]["configuration_name"] === this.state.ConfigurationNameTitle) {
+                        delete jsonObj["configurations"][i];
+                        jsonObj["configurations"][i] = jsonObjConfiguration;
+                        break;
+                    }
+                }
+         }
+         console.log(jsonObj);
          console.log(JSON.stringify(jsonObj));
+
          e.preventDefault();
                  // this.setState({isSubmitting: true});
          const res = await fetch("http://localhost:8080/submit", {
