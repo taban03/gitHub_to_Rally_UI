@@ -515,6 +515,32 @@ export class IncorporationForm extends React.Component {
         });
     }
 
+    removeConfiguration = async e => {
+        if (this.state.ConfigurationNameTitle !== "New configuration") {
+            if (window.confirm('Are you sure you wish to delete this configuration?\n' + this.state.ConfigurationNameTitle)){
+                var jsonObj = JSON.parse("{}");
+                var configurations = [];
+                for (var i = 0 ; i < this.state.existing_config_json["configurations"].length; i++) {
+                    if (this.state.existing_config_json["configurations"][i]["configuration_name"] !== this.state.ConfigurationNameTitle) {
+                        configurations.push(this.state.existing_config_json["configurations"][i]);
+                    }
+                }
+                jsonObj["configurations"] = configurations;
+//                e.preventDefault();
+                console.log(jsonObj);
+                const hostname = window.location.hostname;
+                const res = await fetch(`http://${hostname}:8081/submit`, {
+                    method: "POST",
+                    body: JSON.stringify(jsonObj),
+                    headers: {
+                       "Content-Type": "application/json"
+                    }
+                });
+            }
+        }
+        console.log(jsonObj);
+    }
+
     updateTextedLPRRules(idx) {
         let result=[];
         for (var i=0; i<this.state.existing_config_json["configurations"][idx]["rules"]["labels"].length; i++) {
@@ -676,11 +702,11 @@ export class IncorporationForm extends React.Component {
                 <div>
                     <div className="initial-configuration-information">
                         <h2>Initial configuration information</h2>
-                        <DropdownButton name="items" id="dropdown-basic-button" title={this.state.ConfigurationNameTitle}>
+                        <tr><td style={{width: "100%"}}><DropdownButton style={{width: "100%"-50}} name="items" id="dropdown-basic-button" title={this.state.ConfigurationNameTitle}>
                             {
                                 this.loadConfigurationButtons()
                             }
-                        </DropdownButton>
+                        </DropdownButton></td><td><button style={{width: 50}} type="button" onClick={() => this.removeConfiguration()} className="smallRed"> - </button></td></tr>
                         {this.state.ConfigurationNameTitle === "New configuration" && (
                              <p>New configuration name:  <TextField name="NewConfigurationName" value={this.state.NewConfigurationName} onChange={this.handleStatusChange} id="standard-basic" label="NewConfigurationName"/></p>
                         )}
