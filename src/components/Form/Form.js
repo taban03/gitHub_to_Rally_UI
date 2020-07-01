@@ -36,19 +36,8 @@ export class IncorporationForm extends React.Component {
 
         super(props);
 
-         const hostname = window.location.hostname;
-                         // this.setState({isSubmitting: true});
-         const res = await fetch(`http://${hostname}:8081/read`, {
-             method: "POST",
-             body: JSON.stringify(jsonObj),
-             headers: {
-                "Content-Type": "application/json"
-             }
-         });
-
-
         this.state = {
-            existing_config_json: res,
+            existing_config_json: config_json,
             additionalCode: "",
             rule: "",
             labels: "",
