@@ -2,6 +2,7 @@
   "configurations": [
     {
     "configuration_name": "for testing purposes only",
+    "periodic_run": "Yes",
     "github": {
       "api_key": "150ac3d9679bf78db2864c705b528366fa60f5db",
       "github_base_url": "https://github.gwd.broadcom.net/api/",
@@ -80,6 +81,7 @@
   },
     {
       "configuration_name": "for testing 2",
+      "periodic_run": "No",
       "github": {
         "api_key": "150ac3d9679bf78db2864c705b528366fa60f5db",
         "github_base_url": "https://github.gwd.broadcom.net/api/",

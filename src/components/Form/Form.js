@@ -53,6 +53,7 @@ export class IncorporationForm extends React.Component {
             labelName: "",
             defectTag: "",
             name: "",
+            activeConfiguration: "",
             message: [],
             isClicked: false,
             initialTimestamp: "",
@@ -93,6 +94,7 @@ export class IncorporationForm extends React.Component {
          } else {
                 jsonObjConfiguration["configuration_name"] = this.state.ConfigurationNameTitle;
          }
+         jsonObjConfiguration["periodic_run"] = this.state.activeConfiguration;
          var jsonObjGithub = JSON.parse("{}");
          jsonObjGithub["api_key"] = this.state.apiKeyGit;
          jsonObjGithub["github_base_url"] = this.state.github_base_url;
@@ -625,6 +627,7 @@ export class IncorporationForm extends React.Component {
     initializeFormBasedOnConfiguration = (idx, configName) => () => {
         if (configName==="New configuration"){
             if (window.confirm('Are you sure you want to start a new configuration? All unsaved rules will be deleted')){
+                this.setState({activeConfiguration: "No"})
                 this.setState({apiKeyGit: ""});
                 this.setState({github_base_url: ""});
                 this.setState({repository: ""});
@@ -650,6 +653,7 @@ export class IncorporationForm extends React.Component {
         } else {
             if (window.confirm('Are you sure you want to load "' + configName + '" configuration? All unsaved rules will be deleted')){
                 console.log(this.state.existing_config_json["configurations"]);
+                this.setState({activeConfiguration: this.state.existing_config_json["configurations"][idx]["periodic_run"]})
                 this.setState({apiKeyGit: this.state.existing_config_json["configurations"][idx]["github"]["api_key"]});
                 this.setState({github_base_url: this.state.existing_config_json["configurations"][idx]["github"]["github_base_url"]});
                 this.setState({repository: this.state.existing_config_json["configurations"][idx]["github"]["repository"]});
@@ -681,6 +685,14 @@ export class IncorporationForm extends React.Component {
         }
     }
 
+    makeActive = (idx) => () => {
+                this.setState({activeConfiguration: "Yes"});
+    }
+
+    makeNoActive = (idx) => () => {
+                this.setState({activeConfiguration: "No"});
+    }
+
     loadConfigurationButtons() {
         var result=[];
         for (var i=0; i<this.state.existing_config_json["configurations"].length; i++) {
@@ -702,14 +714,18 @@ export class IncorporationForm extends React.Component {
                 <div>
                     <div className="initial-configuration-information">
                         <h2>Initial configuration information</h2>
-                        <tr><td style={{width: "100%"}}><DropdownButton style={{width: "100%"-50}} name="items" id="dropdown-basic-button" title={this.state.ConfigurationNameTitle}>
+                        <table><tr><td style={{width: "100%"}}><DropdownButton style={{width: "100%"-50}} name="items" id="dropdown-basic-button" title={this.state.ConfigurationNameTitle}>
                             {
                                 this.loadConfigurationButtons()
                             }
-                        </DropdownButton></td><td><button style={{width: 50}} type="button" onClick={() => this.removeConfiguration()} className="smallRed"> - </button></td></tr>
+                        </DropdownButton></td><td><button style={{width: 50}} type="button" onClick={() => this.removeConfiguration()} className="smallRed"> - </button></td></tr></table>
                         {this.state.ConfigurationNameTitle === "New configuration" && (
                              <p>New configuration name:  <TextField name="NewConfigurationName" value={this.state.NewConfigurationName} onChange={this.handleStatusChange} id="standard-basic" label="NewConfigurationName"/></p>
                         )}
+                        <table><tr style={{width: 400}}><td style={{width: 150}}><p>Active configuration:  </p></td><td><DropdownButton style={{width: 250}} name="items" id="dropdown-basic-button" title={this.state.activeConfiguration}>
+                                <Dropdown.Item name="items" onClick={this.makeActive(0)}>Yes</Dropdown.Item>
+                                <Dropdown.Item name="items" onClick={this.makeNoActive(0)}>No</Dropdown.Item>
+                        </DropdownButton></td></tr></table>
                         <h4>GitHub</h4>
                         <p>API key:  <TextField name="apiKeyGit" value={this.state.apiKeyGit} onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
                         <p>GitHub base URL:  <TextField name="github_base_url" value={this.state.github_base_url} onChange={this.handleStatusChange} id="standard-basic" label="GitHub base URL"/></p>
