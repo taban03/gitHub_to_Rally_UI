@@ -22,7 +22,7 @@ app.post("/submit", (req, res) => {
         console.log("Something went wrong!")
         //User has entered some invalid input values
     }
-    fs.writeFile("./conf.json", JSON.stringify(req.body), function(err) {
+    fs.writeFile("./src/conf.json", JSON.stringify(req.body), function(err) {
         if(err) {
             return console.log(err);
         }

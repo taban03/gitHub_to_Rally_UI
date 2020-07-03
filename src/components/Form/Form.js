@@ -8,6 +8,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
 import {Button} from 'react-bootstrap';
+import config_json from '../../conf.json'
 
 const Par1 = (props) => {
     console.log(props.onChange)
@@ -36,6 +37,7 @@ export class IncorporationForm extends React.Component {
         super(props);
 
         this.state = {
+            existing_config_json: config_json,
             additionalCode: "",
             rule: "",
             labels: "",
@@ -51,9 +53,12 @@ export class IncorporationForm extends React.Component {
             labelName: "",
             defectTag: "",
             name: "",
+            activeConfiguration: "",
             message: [],
             isClicked: false,
             initialTimestamp: "",
+            ConfigurationNameTitle: "Select existing configuration",
+            NewConfigurationName: "",
             DropdownButtonLPRTitle: "Item",
             DropdownButtonMergeTitle: "Item",
             DropdownButtonOPRTitle: "Item",
@@ -81,20 +86,27 @@ export class IncorporationForm extends React.Component {
     }
 
     submitFormNew = async e => {
+
     e.preventDefault();
-         var jsonObj = JSON.parse("{}");
+         var jsonObjConfiguration = JSON.parse("{}");
+         if (this.state.ConfigurationNameTitle === "New configuration"){
+                jsonObjConfiguration["configuration_name"] = this.state.NewConfigurationName;
+         } else {
+                jsonObjConfiguration["configuration_name"] = this.state.ConfigurationNameTitle;
+         }
+         jsonObjConfiguration["periodic_run"] = this.state.activeConfiguration;
          var jsonObjGithub = JSON.parse("{}");
          jsonObjGithub["api_key"] = this.state.apiKeyGit;
          jsonObjGithub["github_base_url"] = this.state.github_base_url;
          jsonObjGithub["repository"] = this.state.repository;
-         jsonObj["github"] = jsonObjGithub;
+         jsonObjConfiguration["github"] = jsonObjGithub;
          var jsonObjRally = JSON.parse("{}");
          jsonObjRally["api_key"] = this.state.apiKeyRally;
          jsonObjRally["rally_host"] = this.state.rally_host;
          jsonObjRally["workspace"] = this.state.workspace;
          jsonObjRally["project"] = this.state.project;
-         jsonObj["rally"] = jsonObjRally;
-         jsonObj["initialTimestamp"] = this.state.initialTimestamp;
+         jsonObjConfiguration["rally"] = jsonObjRally;
+         jsonObjConfiguration["initialTimestamp"] = this.state.initialTimestamp;
          var jsonObjRules = JSON.parse("{}");
          jsonObjRules["commit"] = this.state.rulesCommits;
          jsonObjRules["open-pull-request"] = this.state.rulesOpenPullRequest;
@@ -102,8 +114,27 @@ export class IncorporationForm extends React.Component {
          jsonObjRules["labels"] = this.state.rulesLabelsPullRequest;
          jsonObjRules["ready"] = this.state.rulesReady;
          jsonObjRules["new-issue"] = this.state.rulesNewIssues;
-         jsonObj["rules"] = jsonObjRules;
+         jsonObjConfiguration["rules"] = jsonObjRules;
+         console.log(JSON.stringify(jsonObjConfiguration));
+
+         //make it either replace or add a new configuration
+         var jsonObj = JSON.parse("{}");
+         jsonObj["configurations"] = this.state.existing_config_json["configurations"];
+         if (this.state.ConfigurationNameTitle === "New configuration"){
+                jsonObj["configurations"].push(jsonObjConfiguration);
+         } else {
+                // change an existing configuration
+                for (var i = 0 ; i < this.state.existing_config_json["configurations"].length; i++) {
+                    if (this.state.existing_config_json["configurations"][i]["configuration_name"] === this.state.ConfigurationNameTitle) {
+                        delete jsonObj["configurations"][i];
+                        jsonObj["configurations"][i] = jsonObjConfiguration;
+                        break;
+                    }
+                }
+         }
+         console.log(jsonObj);
          console.log(JSON.stringify(jsonObj));
+
          e.preventDefault();
          const hostname = window.location.hostname;
                  // this.setState({isSubmitting: true});
@@ -114,7 +145,6 @@ export class IncorporationForm extends React.Component {
                 "Content-Type": "application/json"
              }
          });
-
     }
 
     handleStatusChange = (event) => {
@@ -150,6 +180,7 @@ export class IncorporationForm extends React.Component {
         this.setState({
             shareholders: update(this.state.shareholders, {[idx]: {[name]: {$set: event.target.value} } })
         });
+
     }
 
     handleStatusChangeOpenPr = (idx, event) => {
@@ -379,6 +410,7 @@ export class IncorporationForm extends React.Component {
     handleRemoveLPR(idx) {
         if (window.confirm('Are you sure you wish to delete this item?\n' + this.state.textedLabelsPullRequestRules[idx]))
         this.setState({
+
           rulesLabelsPullRequest: this.state.rulesLabelsPullRequest.filter((s, _idx) => _idx !== idx),
           textedLabelsPullRequestRules: this.state.textedLabelsPullRequestRules.filter((s, _idx) => _idx !== idx)
 
@@ -485,6 +517,192 @@ export class IncorporationForm extends React.Component {
         });
     }
 
+    removeConfiguration = async e => {
+        if (this.state.ConfigurationNameTitle !== "New configuration") {
+            if (window.confirm('Are you sure you wish to delete this configuration?\n' + this.state.ConfigurationNameTitle)){
+                var jsonObj = JSON.parse("{}");
+                var configurations = [];
+                for (var i = 0 ; i < this.state.existing_config_json["configurations"].length; i++) {
+                    if (this.state.existing_config_json["configurations"][i]["configuration_name"] !== this.state.ConfigurationNameTitle) {
+                        configurations.push(this.state.existing_config_json["configurations"][i]);
+                    }
+                }
+                jsonObj["configurations"] = configurations;
+//                e.preventDefault();
+                console.log(jsonObj);
+                const hostname = window.location.hostname;
+                const res = await fetch(`http://${hostname}:8081/submit`, {
+                    method: "POST",
+                    body: JSON.stringify(jsonObj),
+                    headers: {
+                       "Content-Type": "application/json"
+                    }
+                });
+            }
+        }
+        console.log(jsonObj);
+    }
+
+    updateTextedLPRRules(idx) {
+        let result=[];
+        for (var i=0; i<this.state.existing_config_json["configurations"][idx]["rules"]["labels"].length; i++) {
+            if (this.state.existing_config_json["configurations"][idx]["rules"]["labels"][i]["item"] === "US/DE"){
+                result.push("When a label '" + this.state.existing_config_json["configurations"][idx]["rules"]["labels"][i]["labelName"] + "' exists in a pull request, then move the US/DE to '" + this.state.existing_config_json["configurations"][idx]["rules"]["labels"][i]["action"] + "'");
+            } else {
+                result.push("When a label '" + this.state.existing_config_json["configurations"][idx]["rules"]["labels"][i]["labelName"] + "' exists in a pull request, then move the TA with " + this.state.existing_config_json["configurations"][idx]["rules"]["labels"][i]["item"].substring(3, this.state.existing_config_json["configurations"][idx]["rules"]["labels"][i]["item"].length) + " to '" + this.state.existing_config_json["configurations"][idx]["rules"]["labels"][i]["action"] + "'");
+            }
+        }
+        this.setState({
+            textedLabelsPullRequestRules: update(this.state.textedLabelsPullRequestRules, {$set: result})
+            });
+
+    }
+
+    updateTextedMPRRules(idx) {
+        let result=[];
+        for (var i=0; i<this.state.existing_config_json["configurations"][idx]["rules"]["merged-pull-request"].length; i++) {
+            if (this.state.existing_config_json["configurations"][idx]["rules"]["merged-pull-request"][i]["item"] === "US/DE"){
+                result.push("When a pull request is merged, move the US/DE to '" + this.state.existing_config_json["configurations"][idx]["rules"]["merged-pull-request"][i]["action"] + "'");
+            } else {
+                result.push("When a pull request is merged, move the TA with '" + this.state.existing_config_json["configurations"][idx]["rules"]["merged-pull-request"][i]["item"].substring(3, this.state.existing_config_json["configurations"][idx]["rules"]["merged-pull-request"][i]["item"].length) + "' to '" + this.state.existing_config_json["configurations"][idx]["rules"]["merged-pull-request"][i]["action"] + "'");
+            }
+        }
+        this.setState({
+            textedMergedPullRequestRules: update(this.state.textedMergedPullRequestRules, {$set: result})
+            });
+
+    }
+
+    updateTextedOPRRules(idx) {
+        let result=[];
+        for (var i=0; i<this.state.existing_config_json["configurations"][idx]["rules"]["open-pull-request"].length; i++) {
+            if (this.state.existing_config_json["configurations"][idx]["rules"]["open-pull-request"][i]["item"] === "US/DE"){
+                result.push("When a pull request is merged, move the US/DE to '" + this.state.existing_config_json["configurations"][idx]["rules"]["open-pull-request"][i]["action"] + "'");
+            } else {
+                result.push("When a pull request is merged, move the TA with '" + this.state.existing_config_json["configurations"][idx]["rules"]["open-pull-request"][i]["item"].substring(3, this.state.existing_config_json["configurations"][idx]["rules"]["open-pull-request"][i]["item"].length) + "' to '" + this.state.existing_config_json["configurations"][idx]["rules"]["open-pull-request"][i]["action"] + "'");
+            }
+        }
+        this.setState({
+            textedOpenPullRequestRules: update(this.state.textedOpenPullRequestRules, {$set: result})
+            });
+
+    }
+
+    updateTextedCommitRules(idx) {
+        let result=[];
+        for (var i=0; i<this.state.existing_config_json["configurations"][idx]["rules"]["commit"].length; i++) {
+            if (this.state.existing_config_json["configurations"][idx]["rules"]["commit"][i]["item"] === "US/DE"){
+                result.push("When a pull request is merged, move the US/DE to '" + this.state.existing_config_json["configurations"][idx]["rules"]["commit"][i]["action"] + "'");
+            } else {
+                result.push("When a pull request is merged, move the TA with '" + this.state.existing_config_json["configurations"][idx]["rules"]["commit"][i]["item"].substring(3, this.state.existing_config_json["configurations"][idx]["rules"]["commit"][i]["item"].length) + "' to '" + this.state.existing_config_json["configurations"][idx]["rules"]["commit"][i]["action"] + "'");
+            }
+        }
+        this.setState({
+            textedCommitsRules: update(this.state.textedCommitsRules, {$set: result})
+            });
+
+    }
+    updateTextedNewIssueRules(idx) {
+        let result=[];
+        for (var i=0; i<this.state.existing_config_json["configurations"][idx]["rules"]["new-issue"].length; i++) {
+            result.push("Create a new defect, only if the issue contains this label '" + this.state.existing_config_json["configurations"][idx]["rules"]["new-issue"][i]["required_label"] + "'");
+        }
+        this.setState({
+            textedNewIssuesRules: update(this.state.textedNewIssuesRules, {$set: result})
+            });
+
+    }
+
+    updateTextedReadyRules(idx) {
+        let result=[];
+        for (var i=0; i<this.state.existing_config_json["configurations"][idx]["rules"]["ready"].length; i++) {
+            result.push("When the story state of US is in state '" + this.state.existing_config_json["configurations"][idx]["rules"]["ready"][i]["story_state"] + "' and the task with name '" + this.state.existing_config_json["configurations"][idx]["rules"]["ready"][i]["item"]  + "' is in state '" + this.state.existing_config_json["configurations"][idx]["rules"]["ready"][i]["state"] + "' then mark it as ready.");
+        }
+        this.setState({
+            textedReadyRules: update(this.state.textedReadyRules, {$set: result})   // this.state.textedReadyRules.concat(result)
+            });
+
+    }
+
+    initializeFormBasedOnConfiguration = (idx, configName) => () => {
+        if (configName==="New configuration"){
+            if (window.confirm('Are you sure you want to start a new configuration? All unsaved rules will be deleted')){
+                this.setState({activeConfiguration: "No"})
+                this.setState({apiKeyGit: ""});
+                this.setState({github_base_url: ""});
+                this.setState({repository: ""});
+                this.setState({apiKeyRally: ""});
+                this.setState({rally_host: ""});
+                this.setState({workspace: ""});
+                this.setState({project: ""});
+                this.setState({initialTimestamp: ""});
+                this.setState({rulesLabelsPullRequest: []});
+                this.setState({rulesReady: []});
+                this.setState({rulesNewIssues: []});
+                this.setState({rulesCommits: []});
+                this.setState({rulesOpenPullRequest: []});
+                this.setState({rulesMergedPullRequest: []});
+                this.setState({textedLabelsPullRequestRules: []});
+                this.setState({textedReadyRules: []});
+                this.setState({textedNewIssuesRules: []});
+                this.setState({textedCommitsRules: []});
+                this.setState({textedOpenPullRequestRules: []});
+                this.setState({textedMergedPullRequestRules: []});
+                this.setState({ConfigurationNameTitle: configName});
+            }
+        } else {
+            if (window.confirm('Are you sure you want to load "' + configName + '" configuration? All unsaved rules will be deleted')){
+                console.log(this.state.existing_config_json["configurations"]);
+                this.setState({activeConfiguration: this.state.existing_config_json["configurations"][idx]["periodic_run"]})
+                this.setState({apiKeyGit: this.state.existing_config_json["configurations"][idx]["github"]["api_key"]});
+                this.setState({github_base_url: this.state.existing_config_json["configurations"][idx]["github"]["github_base_url"]});
+                this.setState({repository: this.state.existing_config_json["configurations"][idx]["github"]["repository"]});
+                this.setState({apiKeyRally: this.state.existing_config_json["configurations"][idx]["rally"]["api_key"]});
+                this.setState({rally_host: this.state.existing_config_json["configurations"][idx]["rally"]["rally_host"]});
+                this.setState({workspace: this.state.existing_config_json["configurations"][idx]["rally"]["workspace"]});
+                this.setState({project: this.state.existing_config_json["configurations"][idx]["rally"]["project"]});
+                this.setState({initialTimestamp: this.state.existing_config_json["configurations"][idx]["initialTimestamp"]});
+                this.setState({rulesLabelsPullRequest: this.state.existing_config_json["configurations"][idx]["rules"]["labels"]});
+                this.setState({rulesReady: this.state.existing_config_json["configurations"][idx]["rules"]["ready"]});
+                this.setState({rulesNewIssues: this.state.existing_config_json["configurations"][idx]["rules"]["new-issue"]});
+                this.setState({rulesCommits: this.state.existing_config_json["configurations"][idx]["rules"]["commit"]});
+                this.setState({rulesOpenPullRequest: this.state.existing_config_json["configurations"][idx]["rules"]["open-pull-request"]});
+                this.setState({rulesMergedPullRequest: this.state.existing_config_json["configurations"][idx]["rules"]["merged-pull-request"]});
+                this.setState({textedLabelsPullRequestRules: []});
+                this.setState({textedReadyRules: []});
+                this.setState({textedNewIssuesRules: []});
+                this.setState({textedCommitsRules: []});
+                this.setState({textedOpenPullRequestRules: []});
+                this.setState({textedMergedPullRequestRules: []});
+                this.updateTextedReadyRules(idx);
+                this.updateTextedLPRRules(idx);
+                this.updateTextedMPRRules(idx);
+                this.updateTextedOPRRules(idx);
+                this.updateTextedCommitRules(idx);
+                this.updateTextedNewIssueRules(idx);
+                this.setState({ConfigurationNameTitle: configName});
+            }
+        }
+    }
+
+    makeActive = (idx) => () => {
+                this.setState({activeConfiguration: "Yes"});
+    }
+
+    makeNoActive = (idx) => () => {
+                this.setState({activeConfiguration: "No"});
+    }
+
+    loadConfigurationButtons() {
+        var result=[];
+        for (var i=0; i<this.state.existing_config_json["configurations"].length; i++) {
+            var currentConfigName = this.state.existing_config_json["configurations"][i]["configuration_name"];
+            result.push(<Dropdown.Item  onClick={this.initializeFormBasedOnConfiguration(i, currentConfigName)}>{currentConfigName}</Dropdown.Item>);
+        }
+        result.push(<Dropdown.Item  onClick={this.initializeFormBasedOnConfiguration(this.state.existing_config_json["configurations"].length, "New configuration")}>New configuration</Dropdown.Item>);
+        return result;
+    }
+
     render() {
         const isClicked  = this.state.isClicked;
         console.log(this.state);
@@ -496,22 +714,35 @@ export class IncorporationForm extends React.Component {
                 <div>
                     <div className="initial-configuration-information">
                         <h2>Initial configuration information</h2>
+                        <table><tr><td style={{width: "100%"}}><DropdownButton style={{width: "100%"-50}} name="items" id="dropdown-basic-button" title={this.state.ConfigurationNameTitle}>
+                            {
+                                this.loadConfigurationButtons()
+                            }
+                        </DropdownButton></td><td><button style={{width: 50}} type="button" onClick={() => this.removeConfiguration()} className="smallRed"> - </button></td></tr></table>
+                        {this.state.ConfigurationNameTitle === "New configuration" && (
+                             <p>New configuration name:  <TextField name="NewConfigurationName" value={this.state.NewConfigurationName} onChange={this.handleStatusChange} id="standard-basic" label="NewConfigurationName"/></p>
+                        )}
+                        <table><tr style={{width: 400}}><td style={{width: 150}}><p>Active configuration:  </p></td><td><DropdownButton style={{width: 250}} name="items" id="dropdown-basic-button" title={this.state.activeConfiguration}>
+                                <Dropdown.Item name="items" onClick={this.makeActive(0)}>Yes</Dropdown.Item>
+                                <Dropdown.Item name="items" onClick={this.makeNoActive(0)}>No</Dropdown.Item>
+                        </DropdownButton></td></tr></table>
                         <h4>GitHub</h4>
-                        <p>API key:  <TextField name="apiKeyGit" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
-                        <p>GitHub base URL:  <TextField name="github_base_url" onChange={this.handleStatusChange} id="standard-basic" label="GitHub base URL"/></p>
-                        <p>Repository:  <TextField name="repository" onChange={this.handleStatusChange} id="standard-basic" label="Repository"/></p>
+                        <p>API key:  <TextField name="apiKeyGit" value={this.state.apiKeyGit} onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
+                        <p>GitHub base URL:  <TextField name="github_base_url" value={this.state.github_base_url} onChange={this.handleStatusChange} id="standard-basic" label="GitHub base URL"/></p>
+                        <p>Repository:  <TextField name="repository" value={this.state.repository} onChange={this.handleStatusChange} id="standard-basic" label="Repository"/></p>
                         <br />
                         <br />
                         <h4>Rally</h4>
-                        <p>API key:  <TextField name="apiKeyRally" onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
-                        <p>Rally host:  <TextField name="rally_host" onChange={this.handleStatusChange} id="standard-basic" label="Rally host"/></p>
-                        <p>Workspace:  <TextField name="workspace" onChange={this.handleStatusChange} id="standard-basic" label="Workspace"/></p>
-                        <p>Project:  <TextField name="project" onChange={this.handleStatusChange} id="standard-basic" label="Project"/></p>
+                        <p>API key:  <TextField name="apiKeyRally" value={this.state.apiKeyRally} onChange={this.handleStatusChange} id="standard-basic" label="API key"/></p>
+                        <p>Rally host:  <TextField name="rally_host" value={this.state.rally_host} onChange={this.handleStatusChange} id="standard-basic" label="Rally host"/></p>
+                        <p>Workspace:  <TextField name="workspace" value={this.state.workspace} onChange={this.handleStatusChange} id="standard-basic" label="Workspace"/></p>
+                        <p>Project:  <TextField name="project" value={this.state.project} onChange={this.handleStatusChange} id="standard-basic" label="Project"/></p>
                         <br />
                         <br />
                         <h4>Initial Timestamp</h4>
                         <Form.Control
                         type="date"
+                        value={this.state.initialTimestamp.substring(0, 10)}
                         onChange={this.handleDate}
                         required/>
                     </div>

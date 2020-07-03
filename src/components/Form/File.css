@@ -54,6 +54,14 @@ form button:disabled {
     color: #333;
 }
 
+form button.smallRed {
+    display: inline-block;
+    width: auto;
+    padding: 0 20px;
+    background-color: #e22;
+    font-size: 14px;
+}
+
 form button.small {
     display: inline-block;
     width: auto;
